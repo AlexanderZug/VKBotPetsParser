@@ -29,5 +29,5 @@ list_commands = {
 while True:
     try:
         send._in_process(list_commands)
-    except:
+    except Exception:
         pass
