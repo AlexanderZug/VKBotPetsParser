@@ -25,7 +25,6 @@ class PetsFinder:
                 'gender': one_cat.find('span', class_='gender cx4').get_text(),
                 'description': one_cat.find('div', class_='h4').get_text(),
                 'link': self.host + one_cat.find('a', class_='с-red hover').get('href'),
-                'photo': one_cat.find('img').get('src'),
             })
         for v in cat:
             cats_content = f"\n\n🐱ИМЯ: {v['name']} \n😸ПОЛ: {v['gender']} \n🐱ОПИСАНИЕ: {v['description']} \n" \
