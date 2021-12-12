@@ -26,7 +26,6 @@ class BotServer:
     def _in_process(self, list_commands):
         self.list_commands = list_commands
         self.__new_message()
-        self._main_photo_content_cats(self.list_commands)
 
     def __new_message(self):
         for event in self.__longpoll.listen():
