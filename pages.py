@@ -3,7 +3,7 @@ import requests
 import threading
 
 HOST = 'https://izpriuta.ru'
-URL = 'https://izpriuta.ru/koshki'
+URL = 'https://izpriuta.ru/sobaki'
 
 
 def pages_count(html):
