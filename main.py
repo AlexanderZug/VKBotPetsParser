@@ -21,7 +21,7 @@ list_commands = {
         'description': 'Команда для получения списка кошек, которые ищут дом.'
     },
     'СОБАКИ': {
-        'function': send.dogs_list,
+        'function': send._main_photo_content_dogs,
         'description': 'Команда для получения списка собак, которые ищут дом.'
     },
 }

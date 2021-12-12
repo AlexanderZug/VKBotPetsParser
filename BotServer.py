@@ -1,8 +1,10 @@
 from vk_api.bot_longpoll import VkBotEventType
 from vk_api.utils import get_random_id
 from PetsFinder import PetsFinder
+from PetsFinderDogs import PetsFinderDogs
 
-URL = 'https://izpriuta.ru/koshki'
+URL_CATS = 'https://izpriuta.ru/koshki'
+URL_DOGS = 'https://izpriuta.ru/sobaki'
 
 
 class BotServer:
@@ -14,9 +16,11 @@ class BotServer:
                                               'QWERTYUIOP{}ASDFGHJKL:"ZXCVBNM<>?~'),
                                      "йцукенгшщзхъфывапролджэячсмитьбю.ё"
                                      'ЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮ,Ё'))
-        self.__par = [i for i in PetsFinder(URL).get_content()]
+        self.__par_cat = [i for i in PetsFinder(URL_CATS).get_content()]
+        self.__par_dog = [i for i in PetsFinderDogs(URL_DOGS).get_content()]
         self.__upload = upload
         self.__var_cat_content_photo = []
+        self.__var_dog_content_photo = []
         print('Бот запущен!')
 
     def _in_process(self, list_commands):
@@ -53,14 +57,6 @@ class BotServer:
             random_id=get_random_id(),
         )
 
-    def dogs_list(self, user_id):
-        self._vk.messages.send(
-            peer_id=user_id,
-            message=f'📌📌📌ВОТ КТО У НАС ЖИВЕТ И ИЩЕТ СВОЙ ДОМ📌📌📌'
-                    f'\n\n',
-            random_id=get_random_id(),
-        )
-
     def __upload_photo(self, upload, photo):
         response = upload.photo_messages(photo)[0]
         owner_id = response['owner_id']
@@ -74,13 +70,30 @@ class BotServer:
             random_id=get_random_id(),
             peer_id=peer_id,
             attachment=attachment,
-            message=f'📌📌📌ВОТ КТО У НАС ЖИВЕТ И ИЩЕТ СВОЙ ДОМ📌📌📌'
+            message=f'📌ВОТ КТО У НАС ЖИВЕТ И ИЩЕТ СВОЙ ДОМ📌'
                     f"\n\n{self.__var_cat_content_photo}",
         )
 
     def _main_photo_content_cats(self, user_id):
         content_img_counter = 0
-        for i in PetsFinder(URL).file_write():
-            self.__var_cat_content_photo = self.__par[0 + content_img_counter]
+        for i in PetsFinder(URL_CATS).file_write():
+            self.__var_cat_content_photo = self.__par_cat[0 + content_img_counter]
             content_img_counter += 1
             self.__send_photo_content_cats(user_id, *self.__upload_photo(self.__upload, i))
+
+    def __send_photo_content_dogs(self, peer_id, owner_id, photo_id, access_key):
+        attachment = f'photo{owner_id}_{photo_id}_{access_key}'
+        self._vk.messages.send(
+            random_id=get_random_id(),
+            peer_id=peer_id,
+            attachment=attachment,
+            message=f'📌ВОТ КТО У НАС ЖИВЕТ И ИЩЕТ СВОЙ ДОМ📌'
+                    f"\n\n{self.__var_dog_content_photo}",
+        )
+
+    def _main_photo_content_dogs(self, user_id):
+        content_img_counter_dog = 0
+        for i in PetsFinderDogs(URL_DOGS).file_write():
+            self.__var_dog_content_photo = self.__par_dog[0 + content_img_counter_dog]
+            content_img_counter_dog += 1
+            self.__send_photo_content_dogs(user_id, *self.__upload_photo(self.__upload, i))
