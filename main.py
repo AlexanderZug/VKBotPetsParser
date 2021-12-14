@@ -25,6 +25,10 @@ list_commands = {
         'function': send._main_photo_content_dogs,
         'description': 'Команда для получения списка собак, которые ищут дом.'
     },
+    'ЕЩЕ': {
+        'function': send._more_pets,
+        'description': 'Если хотите еще котиков нажмите эту команду.'
+    },
 }
 
 while True:

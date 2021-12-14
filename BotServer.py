@@ -1,8 +1,10 @@
+import time
 
 from vk_api.bot_longpoll import VkBotEventType
 from vk_api.utils import get_random_id
 from PetsFinder import PetsFinder
 from PetsFinderDogs import PetsFinderDogs
+import pages
 
 URL_CATS = 'https://izpriuta.ru/koshki'
 URL_DOGS = 'https://izpriuta.ru/sobaki'
@@ -22,6 +24,7 @@ class BotServer:
         self.__upload = upload
         self.__var_cat_content_photo = []
         self.__var_dog_content_photo = []
+        self.__user_query = []
         print('Бот запущен!')
 
     def _in_process(self, list_commands):
@@ -79,7 +82,10 @@ class BotServer:
         for i in PetsFinder(URL_CATS).file_write():
             self.__var_cat_content_photo = self.__par_cat[0 + content_img_counter]
             content_img_counter += 1
+            time.sleep(0.2)
             self.__send_photo_content_cats(user_id, *self.__upload_photo(self.__upload, i))
+            time.sleep(1)
+        self.__user_query.append([user_id, 1, 1])
 
     def __send_photo_content_dogs(self, peer_id, owner_id, photo_id, access_key):
         attachment = f'photo{owner_id}_{photo_id}_{access_key}'
@@ -97,3 +103,25 @@ class BotServer:
             self.__var_dog_content_photo = self.__par_dog[0 + content_img_counter_dog]
             content_img_counter_dog += 1
             self.__send_photo_content_dogs(user_id, *self.__upload_photo(self.__upload, i))
+
+    def not_more(self, user_id):
+        self._vk.messages.send(
+            peer_id=user_id,
+            message=f'limits off',
+            random_id=get_random_id(),
+        )
+
+    def _more_pets(self, user_id):
+        for number, user in enumerate(self.__user_query):
+            if user[0] == user_id and user[1] == 1:
+                user[2] += 1
+                if user[2] > int(pages.pages_count()):
+                    self.not_more(user_id)
+                    del self.__user_query[number]
+                else:
+
+                    pass
+                print(self.__user_query)
+                return
+
+        print(self.__user_query)

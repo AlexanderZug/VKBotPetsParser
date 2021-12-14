@@ -3,16 +3,18 @@ import requests
 import threading
 
 HOST = 'https://izpriuta.ru'
-URL = 'https://izpriuta.ru/sobaki'
+URL = 'https://izpriuta.ru/koshki'
 
-
-def pages_count(html):
+def pages_count(html=None):
+    if not html:
+        html = get_html(URL).text
     soup = BeautifulSoup(html, 'html.parser')
     pagination = soup.find_all('ul', class_='pager')
     if pagination:
         pag = pagination[-1].get_text().split(f'\n')
         max_pag = [i for i in pag if i.isdigit()]
         return max(max_pag)
+
 
 
 def get_html(url, params=None):
@@ -48,8 +50,9 @@ def parse():
     else:
         print('Error')
 
+if __name__ == '__main__':
+    thread = threading.Thread(target=parse)
+    thread.start()
+    print(threading.enumerate())
+    thread.join()
 
-thread = threading.Thread(target=parse)
-thread.start()
-print(threading.enumerate())
-thread.join()
