@@ -119,8 +119,7 @@ class BotServer:
                     self.not_more(user_id)
                     del self.__user_query[number]
                 else:
-
-                    pass
+                    pass#
                 print(self.__user_query)
                 return
 
