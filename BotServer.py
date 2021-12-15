@@ -1,10 +1,9 @@
 import time
-
 from vk_api.bot_longpoll import VkBotEventType
 from vk_api.utils import get_random_id
 from PetsFinder import PetsFinder
 from PetsFinderDogs import PetsFinderDogs
-import pages
+from pages import PetsPages
 
 URL_CATS = 'https://izpriuta.ru/koshki'
 URL_DOGS = 'https://izpriuta.ru/sobaki'
@@ -107,7 +106,7 @@ class BotServer:
     def not_more(self, user_id):
         self._vk.messages.send(
             peer_id=user_id,
-            message=f'limits off',
+            message='limits off',
             random_id=get_random_id(),
         )
 
@@ -115,12 +114,11 @@ class BotServer:
         for number, user in enumerate(self.__user_query):
             if user[0] == user_id and user[1] == 1:
                 user[2] += 1
-                if user[2] > int(pages.pages_count()):
+                if user[2] > int(PetsPages().pages_count()):
                     self.not_more(user_id)
                     del self.__user_query[number]
                 else:
-                    pass#
+                    pass  #
                 print(self.__user_query)
                 return
-
         print(self.__user_query)

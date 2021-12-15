@@ -1,8 +1,7 @@
-
 import vk_api
 from vk_api.bot_longpoll import VkBotLongPoll
-from BotServer import BotServer
 from vk_api.upload import VkUpload
+from BotServer import BotServer
 
 vk_session = vk_api.VkApi(token='04cba958eb1393fa7f74693b4532cb9ca782575fb7f121a3042b37401c3d2edd88d434513573478f442de')
 longpoll = VkBotLongPoll(vk_session, 209054655)
