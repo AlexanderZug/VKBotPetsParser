@@ -7,9 +7,12 @@ URL = 'https://izpriuta.ru/koshki'
 
 class PetsPages:
 
+    def __init__(self, url):
+        self.url = url
+
     def pages_count(self, html=None):
         if not html:
-            html = self.get_html(URL).text
+            html = self.get_html(self.url).text
         soup = BeautifulSoup(html, 'html.parser')
         pagination = soup.find_all('ul', class_='pager')
         if pagination:
@@ -17,11 +20,9 @@ class PetsPages:
             max_pag = [i for i in pag if i.isdigit()]
             return max(max_pag)
 
-
     def get_html(self, url, params=None):
         r = requests.get(url, params=params)
         return r
-
 
     def get_content(self, html):
         soup = BeautifulSoup(html, 'html.parser')
@@ -56,23 +57,26 @@ class PetsPages:
             yield file.name
 
     def parse(self):
-        html = self.get_html(URL)
+        html = self.get_html(self.url)
         if html.status_code == 200:
             all_pages = []
-            all_pages_img = []
             pages = self.pages_count(html.text)
             int_pages = int(pages)
             for page in range(1, int_pages):
-                # print(f'Парсится страница {page}')
-                html = self.get_html(URL, params={'page': page})
+                html = self.get_html(self.url, params={'page': page})
                 all_pages.extend([i for i in self.get_content(html.text)])
                 # all_pages_img.extend([i for i in self.file_write(html)])
-            print(all_pages)
-            # print(all_pages_img)
+                # yield all_pages
+            yield all_pages
         else:
             print('Error')
 
-PetsPages().parse()
+    def all_cats_disc(self):
+        for i in self.parse():
+            return i
+
+
+PetsPages(URL).all_cats_disc()
 
     # if __name__ == '__main__':
     #     thread = threading.Thread(target=parse)

@@ -20,10 +20,13 @@ class BotServer:
                                      'ЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮ,Ё'))
         self.__par_cat = [i for i in PetsFinder(URL_CATS).get_content()]
         self.__par_dog = [i for i in PetsFinderDogs(URL_DOGS).get_content()]
+        self.__user_query = [i for i in PetsPages(URL_CATS).parse()]
+        self.__cats_pages_content_disc = PetsPages(URL_CATS).all_cats_disc()
         self.__upload = upload
         self.__var_cat_content_photo = []
         self.__var_dog_content_photo = []
-        self.__user_query = []
+        print(''.join(self.__cats_pages_content_disc[1:9]))
+        print(len(self.__cats_pages_content_disc))
         print('Бот запущен!')
 
     def _in_process(self, list_commands):
@@ -103,10 +106,17 @@ class BotServer:
             content_img_counter_dog += 1
             self.__send_photo_content_dogs(user_id, *self.__upload_photo(self.__upload, i))
 
-    def not_more(self, user_id):
+    def not_more_pages(self, user_id):
         self._vk.messages.send(
             peer_id=user_id,
-            message='limits off',
+            message=f'limits off',
+            random_id=get_random_id(),
+        )
+
+    def next_page_cats(self, user_id):
+        self._vk.messages.send(
+            peer_id=user_id,
+            message=f"{''.join(self.__cats_pages_content_disc[1:9])}",
             random_id=get_random_id(),
         )
 
@@ -114,11 +124,10 @@ class BotServer:
         for number, user in enumerate(self.__user_query):
             if user[0] == user_id and user[1] == 1:
                 user[2] += 1
-                if user[2] > int(PetsPages().pages_count()):
-                    self.not_more(user_id)
+                if user[2] > int(PetsPages(URL_CATS).pages_count()):
+                    self.not_more_pages(user_id)
                     del self.__user_query[number]
                 else:
-                    pass  #
-                print(self.__user_query)
-                return
-        print(self.__user_query)
+                    self.next_page_cats(user_id)
+
+
