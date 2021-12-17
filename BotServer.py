@@ -25,7 +25,8 @@ class BotServer:
         self.__upload = upload
         self.__var_cat_content_photo = []
         self.__var_dog_content_photo = []
-        print(''.join(self.__cats_pages_content_disc[1:9]))
+        self.__var_cat_photo_pages = []
+        # print(''.join(self.__cats_pages_content_disc[1:9]))
         print(len(self.__cats_pages_content_disc))
         print('Бот запущен!')
 
@@ -114,12 +115,12 @@ class BotServer:
             random_id=get_random_id(),
         )
 
-    def next_page_cats(self, user_id):
-        self._vk.messages.send(
-            peer_id=user_id,
-            message=f"{''.join(self.__cats_pages_content_disc[1:9])}",
-            random_id=get_random_id(),
-        )
+    # def next_page_cats(self, user_id):
+    #     self._vk.messages.send(
+    #         peer_id=user_id,
+    #         message=f"{''.join(self.__cats_pages_content_disc[1:9])}",
+    #         random_id=get_random_id(),
+    #     )
 
     def _more_pets(self, user_id):
         for number, user in enumerate(self.__user_query):
@@ -131,25 +132,26 @@ class BotServer:
                 else:
                     self.next_page_cats(user_id)
 
-    def _photo_from_pages_cats(self, user_id):
-        content_img_counter_pages = 0
-        for i in PetsFinder(URL_CATS).file_write():
-            self.__var_cat_content_photo = self.__par_cat[0 + content_img_counter_pages]
-            content_img_counter_pages += 1
-            time.sleep(0.2)
-            self.__send_photo_content_cats(user_id, *self.__upload_photo(self.__upload, i))
-            time.sleep(1)
-        self.__user_query.append([user_id, 1, 1])
+    def next_page_cats(self, peer_id, owner_id, photo_id, access_key):
+        attachment = f'photo{owner_id}_{photo_id}_{access_key}'
+        self._vk.messages.send(
+            peer_id=peer_id,
+            attachment=attachment,
+            message=f"{self.__var_cat_photo_pages}",
+            random_id=get_random_id(),
+        )
 
-    #
-    # def _more_pets_two(self, user_id):
-    #     for number, user in enumerate(self.__user_query):
-    #         if user[0] == user_id and user[1] == 1:
-    #             self.__cats_pages_content_disc
-    #             if user[2] > int(PetsPages(URL_CATS).pages_count()):
-    #                 self.not_more_pages(user_id)
-    #                 del self.__user_query[number]
-    #             else:
-    #                 self.next_page_cats(user_id)
+    def _photo_from_pages_cats(self, user_id):
+        img_counter_pages = 0
+        for i in PetsPages(URL_CATS).img_parse_fom_pages():
+            self.__var_cat_photo_pages = self.__cats_pages_content_disc[0 + img_counter_pages]
+            img_counter_pages += 1
+            time.sleep(0.2)
+            while self.__var_cat_photo_pages < 9:
+                self.next_page_cats(user_id, *self.__upload_photo(self.__upload, i))
+                time.sleep(1)
+        # self.__user_query.append([user_id, 1, 1])
+
+
 
 

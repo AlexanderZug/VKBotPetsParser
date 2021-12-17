@@ -82,7 +82,7 @@ class PetsPages:
             for page in range(1, int_pages):
                 html = self.get_html(self.url, params={'page': page})
                 all_pages.extend([i for i in self.file_write(html.text)])
-            print(all_pages)
+            yield all_pages
         else:
             print('Error')
 
