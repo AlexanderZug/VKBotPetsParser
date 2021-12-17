@@ -65,8 +65,6 @@ class PetsPages:
             for page in range(1, int_pages):
                 html = self.get_html(self.url, params={'page': page})
                 all_pages.extend([i for i in self.get_content(html.text)])
-                # all_pages_img.extend([i for i in self.file_write(html)])
-                # yield all_pages
             yield all_pages
         else:
             print('Error')
@@ -75,8 +73,21 @@ class PetsPages:
         for i in self.parse():
             return i
 
+    def img_parse_fom_pages(self):
+        html = self.get_html(self.url)
+        if html.status_code == 200:
+            all_pages = []
+            pages = self.pages_count(html.text)
+            int_pages = int(pages)
+            for page in range(1, int_pages):
+                html = self.get_html(self.url, params={'page': page})
+                all_pages.extend([i for i in self.file_write(html.text)])
+            print(all_pages)
+        else:
+            print('Error')
 
-PetsPages(URL).all_cats_disc()
+
+PetsPages(URL).img_parse_fom_pages()
 
     # if __name__ == '__main__':
     #     thread = threading.Thread(target=parse)

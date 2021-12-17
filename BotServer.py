@@ -109,7 +109,8 @@ class BotServer:
     def not_more_pages(self, user_id):
         self._vk.messages.send(
             peer_id=user_id,
-            message=f'limits off',
+            message='📌У НАС БОЛЬШЕ НЕТ ПИТОМЦЕВБ НО ДУМАЮ, ЧТО ВЫ СМОЖЕТЕ ВЫБРАТЬ ИЗ ТЕХ, КОГО ВЫ УЖЕ ПОСМОТРЕЛИ'
+                    'ЕСЛИ ВАМ НУЖНА ПОМОЩЬ - СВЯЖИТЕСЬ С НАМИ📌',
             random_id=get_random_id(),
         )
 
@@ -129,5 +130,26 @@ class BotServer:
                     del self.__user_query[number]
                 else:
                     self.next_page_cats(user_id)
+
+    def _photo_from_pages_cats(self, user_id):
+        content_img_counter_pages = 0
+        for i in PetsFinder(URL_CATS).file_write():
+            self.__var_cat_content_photo = self.__par_cat[0 + content_img_counter_pages]
+            content_img_counter_pages += 1
+            time.sleep(0.2)
+            self.__send_photo_content_cats(user_id, *self.__upload_photo(self.__upload, i))
+            time.sleep(1)
+        self.__user_query.append([user_id, 1, 1])
+
+    #
+    # def _more_pets_two(self, user_id):
+    #     for number, user in enumerate(self.__user_query):
+    #         if user[0] == user_id and user[1] == 1:
+    #             self.__cats_pages_content_disc
+    #             if user[2] > int(PetsPages(URL_CATS).pages_count()):
+    #                 self.not_more_pages(user_id)
+    #                 del self.__user_query[number]
+    #             else:
+    #                 self.next_page_cats(user_id)
 
 
