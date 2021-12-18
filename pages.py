@@ -86,8 +86,11 @@ class PetsPages:
         else:
             print('Error')
 
+    def get_out_cats_img(self):
+        for i in self.img_parse_fom_pages():
+            return i
 
-PetsPages(URL).img_parse_fom_pages()
+# PetsPages(URL).img_parse_fom_pages()
 
     # if __name__ == '__main__':
     #     thread = threading.Thread(target=parse)
