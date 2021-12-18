@@ -27,6 +27,7 @@ class BotServer:
         self.__var_cat_content_photo = []
         self.__var_dog_content_photo = []
         self.__var_cat_photo_pages = []
+        print(self.__cats_img[:9])
         print(len(self.__cats_pages_content_disc))
         print('Бот запущен!')
 
@@ -85,9 +86,9 @@ class BotServer:
         for i in PetsFinder(URL_CATS).file_write():
             self.__var_cat_content_photo = self.__par_cat[0 + content_img_counter]
             content_img_counter += 1
-            # time.sleep(0.2)
+            time.sleep(0.2)
             self.__send_photo_content_cats(user_id, *self.__upload_photo(self.__upload, i))
-            # time.sleep(1)
+            time.sleep(1)
         self.__user_query.append([user_id, 1, 1])
 
     def __send_photo_content_dogs(self, peer_id, owner_id, photo_id, access_key):
@@ -105,7 +106,9 @@ class BotServer:
         for i in PetsFinderDogs(URL_DOGS).file_write():
             self.__var_dog_content_photo = self.__par_dog[0 + content_img_counter_dog]
             content_img_counter_dog += 1
+            time.sleep(0.2)
             self.__send_photo_content_dogs(user_id, *self.__upload_photo(self.__upload, i))
+            time.sleep(1)
 
     def not_more_pages(self, user_id):
         self._vk.messages.send(
@@ -126,16 +129,15 @@ class BotServer:
 
     def _photo_from_pages_cats(self, user_id):
         img_counter_pages = 0
-        for i in self.__cats_img:
-            if img_counter_pages < 9:
-                self.__var_cat_photo_pages = self.__cats_pages_content_disc[0 + img_counter_pages]
-                img_counter_pages += 1
-                time.sleep(0.2)
-                self.next_page_cats(user_id, *self.__upload_photo(self.__upload, i))
-                time.sleep(1)
-            else:
-                pass
-        # self._more_pets(user_id)
+        for i in self.__cats_img[:9]:
+            # if img_counter_pages < 9:
+            self.__var_cat_photo_pages = self.__cats_pages_content_disc[0 + img_counter_pages]
+            img_counter_pages += 1
+            time.sleep(0.2)
+            self.next_page_cats(user_id, *self.__upload_photo(self.__upload, i))
+            time.sleep(1)
+            # else:
+            #     pass
 
     def _more_pets(self, user_id):
         for number, user in enumerate(self.__user_query):
