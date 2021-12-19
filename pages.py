@@ -5,6 +5,7 @@ import threading
 HOST = 'https://izpriuta.ru'
 URL = 'https://izpriuta.ru/koshki'
 
+
 class PetsPages:
 
     def __init__(self, url):
@@ -90,10 +91,10 @@ class PetsPages:
         for i in self.img_parse_fom_pages():
             return i
 
-# PetsPages(URL).img_parse_fom_pages()
+# PetsPages(URL).get_out_cats_img()
 
-    # if __name__ == '__main__':
-    #     thread = threading.Thread(target=parse)
-    #     thread.start()
-    #     print(threading.enumerate())
-    #     thread.join()
+# if __name__ == '__main__':
+#     thread = threading.Thread(target=parse)
+#     thread.start()
+#     print(threading.enumerate())
+#     thread.join()
