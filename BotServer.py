@@ -27,7 +27,8 @@ class BotServer:
         self.__var_cat_content_photo = []
         self.__var_dog_content_photo = []
         self.__var_cat_photo_pages = []
-        self.__pages_counter = 0
+        self.iter_counter = 0
+        self.img_counter_pages = 0
         print(len(self.__cats_pages_content_disc))
         print('Бот запущен!')
 
@@ -128,47 +129,25 @@ class BotServer:
         )
 
     def _photo_from_pages_cats(self, user_id):
-        iter_counter = 0
-        img_counter_pages = 0
-        if self.__pages_counter > 1:
-            iter_counter += 9
-            img_counter_pages += 9
-            for i in self.__cats_img [iter_counter:iter_counter+9]:
-                self.__var_cat_photo_pages = self.__cats_pages_content_disc[0 + img_counter_pages]
-                img_counter_pages += 1
-                iter_counter += 1
-                time.sleep(0.2)
-                self.next_page_cats(user_id, *self.__upload_photo(self.__upload, i))
-                time.sleep(1)
-        else:
-            for i in self.__cats_img [:9]:
-                self.__var_cat_photo_pages = self.__cats_pages_content_disc[0 + img_counter_pages]
-                img_counter_pages += 1
-                iter_counter += 1
-                time.sleep(0.2)
-                self.next_page_cats(user_id, *self.__upload_photo(self.__upload, i))
-                time.sleep(1)
 
-            #     self.__cats_img = self.__cats_img[img_counter_pages:]
-            #     iter_counter = 0
+        for i in self.__cats_img[self.iter_counter:self.iter_counter+9]:
+            self.__var_cat_photo_pages = self.__cats_pages_content_disc[0 + self.img_counter_pages]
+            self.img_counter_pages += 1
+            self.iter_counter += 1
+            time.sleep(0.2)
+            self.next_page_cats(user_id, *self.__upload_photo(self.__upload, i))
+            time.sleep(1)
+
 
     def _more_pets(self, user_id):
         for number, user in enumerate(self.__user_query):
             if user[0] == user_id and user[1] == 1:
                 user[2] += 8
-                self.__pages_counter += 1
                 if user[2] > len(self.__cats_img):
                     self.not_more_pages(user_id)
                     del self.__user_query[number]
                 else:
                     self._photo_from_pages_cats(user_id)
-
-    def user_wait_cats(self, user_id):
-        self._vk.messages.send(
-            peer_id=user_id,
-            message='📌Если хотите посмотреть еще питомцев - напишите команду ЕЩЕ📌',
-            random_id=get_random_id(),
-        )
 
     # def _more_pets(self, user_id):
     #     for number, user in enumerate(self.__user_query):
