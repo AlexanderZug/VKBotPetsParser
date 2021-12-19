@@ -114,8 +114,10 @@ class BotServer:
     def not_more_pages(self, user_id):
         self._vk.messages.send(
             peer_id=user_id,
-            message='📌У НАС БОЛЬШЕ НЕТ ПИТОМЦЕВБ НО ДУМАЮ, ЧТО ВЫ СМОЖЕТЕ ВЫБРАТЬ ИЗ ТЕХ, КОГО ВЫ УЖЕ ПОСМОТРЕЛИ'
-                    'ЕСЛИ ВАМ НУЖНА ПОМОЩЬ - СВЯЖИТЕСЬ С НАМИ📌',
+            message='📌У НАС БОЛЬШЕ НЕТ ПИТОМЦЕВ, НО ДУМАЮ, ЧТО ВЫ СМОЖЕТЕ ВЫБРАТЬ ИЗ ТЕХ, КОГО ВЫ УЖЕ ПОСМОТРЕЛИ📌\n'
+                    'ЕСЛИ ВАМ НУЖНА ПОМОЩЬ - СВЯЖИТЕСЬ С НАМИ ☎☎☎\n'
+                    'Тел.: +7 915 307 09 99\n'
+                    'e-mail: sobaka@izpriuta.ru',
             random_id=get_random_id(),
         )
 
@@ -129,7 +131,6 @@ class BotServer:
         )
 
     def _photo_from_pages_cats(self, user_id):
-
         for i in self.__cats_img[self.iter_counter:self.iter_counter+9]:
             self.__var_cat_photo_pages = self.__cats_pages_content_disc[0 + self.img_counter_pages]
             self.img_counter_pages += 1
@@ -137,7 +138,6 @@ class BotServer:
             time.sleep(0.2)
             self.next_page_cats(user_id, *self.__upload_photo(self.__upload, i))
             time.sleep(1)
-
 
     def _more_pets(self, user_id):
         for number, user in enumerate(self.__user_query):
@@ -148,16 +148,6 @@ class BotServer:
                     del self.__user_query[number]
                 else:
                     self._photo_from_pages_cats(user_id)
-
-    # def _more_pets(self, user_id):
-    #     for number, user in enumerate(self.__user_query):
-    #         if user[0] == user_id and user[1] == 1:
-    #             user[2] += 1
-    #             if user[2] > int(PetsPages(URL_CATS).pages_count()):
-    #                 self.not_more_pages(user_id)
-    #                 del self.__user_query[number]
-    #             else:
-    #                 self._photo_from_pages_cats(user_id)
 
 
 
