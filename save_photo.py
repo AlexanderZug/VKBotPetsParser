@@ -2,7 +2,7 @@
 from vk_api import VkApi
 from vk_api.upload import VkUpload
 from vk_api.utils import get_random_id
-from PetsFinder import PetsFinder
+from PetsFinderCats import PetsFinder
 
 TOKEN = '04cba958eb1393fa7f74693b4532cb9ca782575fb7f121a3042b37401c3d2edd88d434513573478f442de'
 PEER_ID = 632001

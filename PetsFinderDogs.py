@@ -15,7 +15,7 @@ class PetsFinderDogs:
         r = requests.get(self.url, params=params)
         return r
 
-    def get_content(self):
+    def get_content_dogs(self):
         soup = BeautifulSoup(self.__get_html(self.url).text, HTML_PARSER)
         dogs = soup.find_all('div', class_='card box')
         dog = []
@@ -31,7 +31,7 @@ class PetsFinderDogs:
                            f"🐕🐕🐕ССЫЛКА: {v['link']}"
             yield dogs_content
 
-    def file_write(self):
+    def file_write_imf_first_page_dogs(self):
         soup = BeautifulSoup(self.__get_html(self.url).text, HTML_PARSER)
         dogs = soup.find_all('div', class_='card box')
         dog = []

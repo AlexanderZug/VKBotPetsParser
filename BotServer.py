@@ -1,9 +1,9 @@
 import time
 from vk_api.bot_longpoll import VkBotEventType
 from vk_api.utils import get_random_id
-from PetsFinder import PetsFinder
+from PetsFinderCats import PetsFinderCats
 from PetsFinderDogs import PetsFinderDogs
-from pages import PetsPages
+from Cats_pages import PetsPagesCats
 
 URL_CATS = 'https://izpriuta.ru/koshki'
 URL_DOGS = 'https://izpriuta.ru/sobaki'
@@ -18,11 +18,11 @@ class BotServer:
                                               'QWERTYUIOP{}ASDFGHJKL:"ZXCVBNM<>?~'),
                                      "йцукенгшщзхъфывапролджэячсмитьбю.ё"
                                      'ЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮ,Ё'))
-        self.__par_cat = [i for i in PetsFinder(URL_CATS).get_content()]
-        self.__par_dog = [i for i in PetsFinderDogs(URL_DOGS).get_content()]
-        self.__user_query = [i for i in PetsPages(URL_CATS).parse()]
-        self.__cats_pages_content_disc = PetsPages(URL_CATS).all_cats_disc()
-        self.__cats_img = PetsPages(URL_CATS).get_out_cats_img()
+        self.__par_cat = [i for i in PetsFinderCats(URL_CATS).get_content_cats()]
+        self.__par_dog = [i for i in PetsFinderDogs(URL_DOGS).get_content_dogs()]
+        self.__user_query = [i for i in PetsPagesCats(URL_CATS)._parse_cats()]
+        self.__cats_pages_content_disc = PetsPagesCats(URL_CATS)._all_cats_disc()
+        self.__cats_img = PetsPagesCats(URL_CATS)._get_out_cats_img()
         self.__upload = upload
         self.__var_cat_content_photo = []
         self.__var_dog_content_photo = []
@@ -86,7 +86,7 @@ class BotServer:
 
     def _main_photo_content_cats(self, user_id):
         content_img_counter = 0
-        for i in PetsFinder(URL_CATS).file_write():
+        for i in PetsFinderCats(URL_CATS).file_write_img_first_page_cats():
             self.__var_cat_content_photo = self.__par_cat[0 + content_img_counter]
             content_img_counter += 1
             time.sleep(0.2)
@@ -106,7 +106,7 @@ class BotServer:
 
     def _main_photo_content_dogs(self, user_id):
         content_img_counter_dog = 0
-        for i in PetsFinderDogs(URL_DOGS).file_write():
+        for i in PetsFinderDogs(URL_DOGS).file_write_imf_first_page_dogs():
             self.__var_dog_content_photo = self.__par_dog[0 + content_img_counter_dog]
             content_img_counter_dog += 1
             time.sleep(0.2)
