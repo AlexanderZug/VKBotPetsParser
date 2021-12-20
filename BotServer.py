@@ -40,14 +40,16 @@ class BotServer:
         for event in self.__longpoll.listen():
             if event.type == VkBotEventType.MESSAGE_NEW:
                 msg = event.object.text.upper().translate(self.__char_table)
-                try:
-                    self.list_commands[msg]['function'](event.object.peer_id)
-                except KeyError:
+                for command in self.list_commands:
+                    if command.replace(' --noshow', '') == msg:
+                        self.list_commands[command]['function'](event.object.peer_id)
+                        break
+                else:
                     self.__rectification(event.object.peer_id)
 
     def command_help(self, user_id):
         bot_commands = [f'🐕 {value} 🐈 {self.list_commands[value]["description"]}' for number_iteration, value in
-                        enumerate(self.list_commands)]
+                        enumerate(self.list_commands) if value.find(' --noshow') == -1]
         bot_commands = '\n\n'.join(bot_commands)
         self._vk.messages.send(
             peer_id=user_id,
@@ -57,7 +59,7 @@ class BotServer:
 
     def __rectification(self, user_id):
         bot_commands = [f'🐕 {value} 🐈 {self.list_commands[value]["description"]}' for number_iteration, value in
-                        enumerate(self.list_commands)]
+                        enumerate(self.list_commands) if value.find(' --noshow') == -1]
         bot_commands = '\n\n'.join(bot_commands)
         self._vk.messages.send(
             peer_id=user_id,
@@ -140,7 +142,7 @@ class BotServer:
             time.sleep(1)
         self.__more_pets_in_iter(user_id)
 
-    def _more_pets(self, user_id):
+    def _more_pets_cats(self, user_id):
         for number, user in enumerate(self.__user_query):
             if user[0] == user_id and user[1] == 1:
                 user[2] += 8
