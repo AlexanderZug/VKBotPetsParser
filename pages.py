@@ -41,7 +41,7 @@ class PetsPages:
                            f"🐈🐈🐈ССЫЛКА: {v['link']}"
             yield cats_content
 
-    def file_write(self, html):
+    def file_write_img(self, html):
         soup = BeautifulSoup(html, 'html.parser')
         cats = soup.find_all('div', class_='card box')
         cat = []
@@ -74,7 +74,7 @@ class PetsPages:
         for i in self.parse():
             return i
 
-    def img_parse_fom_pages(self):
+    def img_parse_from_pages(self):
         html = self.get_html(self.url)
         if html.status_code == 200:
             all_pages = []
@@ -82,13 +82,13 @@ class PetsPages:
             int_pages = int(pages)
             for page in range(1, int_pages):
                 html = self.get_html(self.url, params={'page': page})
-                all_pages.extend([i for i in self.file_write(html.text)])
+                all_pages.extend([i for i in self.file_write_img(html.text)])
             yield all_pages
         else:
             print('Error')
 
     def get_out_cats_img(self):
-        for i in self.img_parse_fom_pages():
+        for i in self.img_parse_from_pages():
             return i
 
 # PetsPages(URL).get_out_cats_img()

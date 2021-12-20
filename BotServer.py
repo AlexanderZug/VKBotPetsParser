@@ -27,8 +27,8 @@ class BotServer:
         self.__var_cat_content_photo = []
         self.__var_dog_content_photo = []
         self.__var_cat_photo_pages = []
-        self.iter_counter = 0
-        self.img_counter_pages = 0
+        self.__iter_counter_cats = 0
+        self.__img_counter_pages_cats = 0
         print(len(self.__cats_pages_content_disc))
         print('Бот запущен!')
 
@@ -111,7 +111,7 @@ class BotServer:
             self.__send_photo_content_dogs(user_id, *self.__upload_photo(self.__upload, i))
             time.sleep(1)
 
-    def not_more_pages(self, user_id):
+    def __not_more_pages(self, user_id):
         self._vk.messages.send(
             peer_id=user_id,
             message='📌У нас больше нет питомцев, но думаю, что Вы сможете выбрать из тех, кого Вы уже посмотрели📌\n'
@@ -121,7 +121,7 @@ class BotServer:
             random_id=get_random_id(),
         )
 
-    def next_page_cats(self, peer_id, owner_id, photo_id, access_key):
+    def __next_page_cats(self, peer_id, owner_id, photo_id, access_key):
         attachment = f'photo{owner_id}_{photo_id}_{access_key}'
         self._vk.messages.send(
             peer_id=peer_id,
@@ -130,27 +130,27 @@ class BotServer:
             random_id=get_random_id(),
         )
 
-    def _photo_from_pages_cats(self, user_id):
-        for i in self.__cats_img[self.iter_counter:self.iter_counter+9]:
-            self.__var_cat_photo_pages = self.__cats_pages_content_disc[0 + self.img_counter_pages]
-            self.img_counter_pages += 1
-            self.iter_counter += 1
+    def __photo_from_pages_cats(self, user_id):
+        for i in self.__cats_img[self.__iter_counter_cats:self.__iter_counter_cats+9]:
+            self.__var_cat_photo_pages = self.__cats_pages_content_disc[0 + self.__img_counter_pages_cats]
+            self.__img_counter_pages_cats += 1
+            self.__iter_counter_cats += 1
             time.sleep(0.2)
-            self.next_page_cats(user_id, *self.__upload_photo(self.__upload, i))
+            self.__next_page_cats(user_id, *self.__upload_photo(self.__upload, i))
             time.sleep(1)
-        self.more_pets_in_iter(user_id)
+        self.__more_pets_in_iter(user_id)
 
     def _more_pets(self, user_id):
         for number, user in enumerate(self.__user_query):
             if user[0] == user_id and user[1] == 1:
                 user[2] += 8
                 if user[2] > len(self.__cats_img):
-                    self.not_more_pages(user_id)
+                    self.__not_more_pages(user_id)
                     del self.__user_query[number]
                 else:
-                    self._photo_from_pages_cats(user_id)
+                    self.__photo_from_pages_cats(user_id)
 
-    def more_pets_in_iter(self, user_id):
+    def __more_pets_in_iter(self, user_id):
         self._vk.messages.send(
             peer_id=user_id,
             message='\n\n📌Если хотите увидеть больше питомцев напишите 🐕ЕЩЕ🐈 или наберите команду 🐕ПОМОЩЬ🐈 , '
