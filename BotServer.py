@@ -114,8 +114,8 @@ class BotServer:
     def not_more_pages(self, user_id):
         self._vk.messages.send(
             peer_id=user_id,
-            message='📌У НАС БОЛЬШЕ НЕТ ПИТОМЦЕВ, НО ДУМАЮ, ЧТО ВЫ СМОЖЕТЕ ВЫБРАТЬ ИЗ ТЕХ, КОГО ВЫ УЖЕ ПОСМОТРЕЛИ📌\n'
-                    'ЕСЛИ ВАМ НУЖНА ПОМОЩЬ - СВЯЖИТЕСЬ С НАМИ ☎☎☎\n'
+            message='📌У нас больше нет питомцев, но думаю, что Вы сможете выбрать из тех, кого Вы уже посмотрели📌\n'
+                    'Если Вам нужна помощь - Свяжитесь с нами ☎☎☎\n'
                     'Тел.: +7 915 307 09 99\n'
                     'e-mail: sobaka@izpriuta.ru',
             random_id=get_random_id(),
@@ -138,6 +138,7 @@ class BotServer:
             time.sleep(0.2)
             self.next_page_cats(user_id, *self.__upload_photo(self.__upload, i))
             time.sleep(1)
+        self.more_pets_in_iter(user_id)
 
     def _more_pets(self, user_id):
         for number, user in enumerate(self.__user_query):
@@ -148,6 +149,14 @@ class BotServer:
                     del self.__user_query[number]
                 else:
                     self._photo_from_pages_cats(user_id)
+
+    def more_pets_in_iter(self, user_id):
+        self._vk.messages.send(
+            peer_id=user_id,
+            message='\n\n📌Если хотите увидеть больше питомцев напишите 🐕ЕЩЕ🐈 или наберите команду 🐕ПОМОЩЬ🐈 , '
+                    'чтобы вернуться в главное меню\n',
+            random_id=get_random_id(),
+        )
 
 
 
