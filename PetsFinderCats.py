@@ -1,5 +1,9 @@
+
+from decorators import error_wrapper
 from bs4 import BeautifulSoup
 import requests
+requests.packages.urllib3.disable_warnings()
+
 
 HOST = 'https://izpriuta.ru'
 HTML_PARSER = 'html.parser'
@@ -11,8 +15,9 @@ class PetsFinderCats:
         self.url = url
         self.host = HOST
 
+    @error_wrapper
     def __get_html(self, params=None):
-        r = requests.get(self.url, params=params)
+        r = requests.get(self.url, params=params, verify=False)
         return r
 
     def get_content_cats(self):
@@ -31,6 +36,7 @@ class PetsFinderCats:
                            f"🐈🐈🐈ССЫЛКА: {v['link']}"
             yield cats_content
 
+    @error_wrapper
     def file_write_img_first_page_cats(self):
         soup = BeautifulSoup(self.__get_html(self.url).text, HTML_PARSER)
         cats = soup.find_all('div', class_='card box')
@@ -43,6 +49,7 @@ class PetsFinderCats:
             for img in cat:
                 with open(f"/Users/Polzovatel/Desktop/PycharmProjects/PetsFour/images/{img['name'] + '.jpg'}",
                           'wb') as file:
-                    for bit in requests.get(img['photo']).iter_content():
+                    for bit in requests.get(img['photo'], verify=False).iter_content():
                         file.write(bit)
             yield file.name
+
