@@ -1,6 +1,5 @@
 from bs4 import BeautifulSoup
 import requests
-import threading
 
 HOST = 'https://izpriuta.ru'
 URL = 'https://izpriuta.ru/koshki'
@@ -17,7 +16,7 @@ class PetsPagesCats:
         soup = BeautifulSoup(html, 'html.parser')
         pagination = soup.find_all('ul', class_='pager')
         if pagination:
-            pag = pagination[-1].get_text().split(f'\n')
+            pag = pagination[-1].get_text().split('\n')
             max_pag = [i for i in pag if i.isdigit()]
             return max(max_pag)
 
@@ -37,7 +36,8 @@ class PetsPagesCats:
                 'link': HOST + one_cat.find('a', class_='с-red hover').get('href'),
             })
         for v in cat:
-            cats_content = f"\n\n🐱ИМЯ: {v['name']} \n😸ПОЛ: {v['gender']} \n🐱ОПИСАНИЕ: {v['description']} \n" \
+            cats_content = f"\n\n🐱ИМЯ: {v['name']} \n😸ПОЛ: {v['gender']} \n" \
+                           f"🐱ОПИСАНИЕ: {v['description']} \n" \
                            f"🐈🐈🐈ССЫЛКА: {v['link']}"
             yield cats_content
 
@@ -51,7 +51,8 @@ class PetsPagesCats:
                 'photo': one_cat.find('img').get('src'),
             })
             for img in cat:
-                with open(f"/Users/Polzovatel/Desktop/PycharmProjects/PetsFour/img_pages_cats/{img['name'] + '.jpg'}",
+                with open(f"/Users/Polzovatel/Desktop/PycharmProjects/PetsFour/img_pages_cats/"
+                          f"{img['name'] + '.jpg'}",
                           'wb') as file:
                     for bit in requests.get(img['photo']).iter_content():
                         file.write(bit)
@@ -87,10 +88,3 @@ class PetsPagesCats:
         for i in self.__img_parse_from_pages_cats():
             return i
 
-# PetsPages(URL).get_out_cats_img()
-
-# if __name__ == '__main__':
-#     thread = threading.Thread(target=parse)
-#     thread.start()
-#     print(threading.enumerate())
-#     thread.join()
