@@ -7,6 +7,7 @@ from Cats_pages import PetsPagesCats
 
 URL_CATS = 'https://izpriuta.ru/koshki'
 URL_DOGS = 'https://izpriuta.ru/sobaki'
+UNVISIBLE_SEND_USER_ELEMENT = ' --noshow'
 
 
 class BotServer:
@@ -41,7 +42,7 @@ class BotServer:
             if event.type == VkBotEventType.MESSAGE_NEW:
                 msg = event.object.text.upper().translate(self.__char_table)
                 for command in self.list_commands:
-                    if command.replace(' --noshow', '') == msg:
+                    if command.replace(UNVISIBLE_SEND_USER_ELEMENT, '') == msg:
                         self.list_commands[command]['function'](event.object.peer_id)
                         break
                 else:
@@ -49,7 +50,7 @@ class BotServer:
 
     def command_help(self, user_id):
         bot_commands = [f'🐕 {value} 🐈 {self.list_commands[value]["description"]}' for number_iteration, value in
-                        enumerate(self.list_commands) if value.find(' --noshow') == -1]
+                        enumerate(self.list_commands) if value.find(UNVISIBLE_SEND_USER_ELEMENT) == -1]
         bot_commands = '\n\n'.join(bot_commands)
         self._vk.messages.send(
             peer_id=user_id,
@@ -84,16 +85,6 @@ class BotServer:
                     f"\n\n{self.__var_cat_content_photo}",
         )
 
-    def _main_photo_content_cats(self, user_id):
-        content_img_counter = 0
-        for i in PetsFinderCats(URL_CATS).file_write_img_first_page_cats():
-            self.__var_cat_content_photo = self.__par_cat[0 + content_img_counter]
-            content_img_counter += 1
-            time.sleep(0.2)
-            self.__send_photo_content_cats(user_id, *self.__upload_photo(self.__upload, i))
-            time.sleep(1)
-        self.__user_query.append([user_id, 1, 1])
-
     def __send_photo_content_dogs(self, peer_id, owner_id, photo_id, access_key):
         attachment = f'photo{owner_id}_{photo_id}_{access_key}'
         self._vk.messages.send(
@@ -103,15 +94,6 @@ class BotServer:
             message=f'📌ВОТ КТО У НАС ЖИВЕТ И ИЩЕТ СВОЙ ДОМ📌'
                     f"\n\n{self.__var_dog_content_photo}",
         )
-
-    def _main_photo_content_dogs(self, user_id):
-        content_img_counter_dog = 0
-        for i in PetsFinderDogs(URL_DOGS).file_write_imf_first_page_dogs():
-            self.__var_dog_content_photo = self.__par_dog[0 + content_img_counter_dog]
-            content_img_counter_dog += 1
-            time.sleep(0.2)
-            self.__send_photo_content_dogs(user_id, *self.__upload_photo(self.__upload, i))
-            time.sleep(1)
 
     def __not_more_pages(self, user_id):
         self._vk.messages.send(
@@ -131,6 +113,34 @@ class BotServer:
             message=f"{self.__var_cat_photo_pages}",
             random_id=get_random_id(),
         )
+
+    def __more_pets_in_iter(self, user_id):
+        self._vk.messages.send(
+            peer_id=user_id,
+            message='📌Если хотите увидеть больше питомцев напишите 🐕ЕЩЕ🐈 или наберите команду 🐕ПОМОЩЬ🐈 , '
+                    'чтобы вернуться в главное меню.\n',
+            random_id=get_random_id(),
+        )
+
+    def _main_photo_content_cats(self, user_id):
+        content_img_counter = 0
+        for i in PetsFinderCats(URL_CATS).file_write_img_first_page_cats():
+            self.__var_cat_content_photo = self.__par_cat[0 + content_img_counter]
+            content_img_counter += 1
+            time.sleep(0.2)
+            self.__send_photo_content_cats(user_id, *self.__upload_photo(self.__upload, i))
+            time.sleep(1)
+        self.__more_pets_in_iter(user_id)
+        self.__user_query.append([user_id, 1, 1])
+
+    def _main_photo_content_dogs(self, user_id):
+        content_img_counter_dog = 0
+        for i in PetsFinderDogs(URL_DOGS).file_write_imf_first_page_dogs():
+            self.__var_dog_content_photo = self.__par_dog[0 + content_img_counter_dog]
+            content_img_counter_dog += 1
+            time.sleep(0.2)
+            self.__send_photo_content_dogs(user_id, *self.__upload_photo(self.__upload, i))
+            time.sleep(1)
 
     def __photo_from_pages_cats(self, user_id):
         for i in self.__cats_img[self.__iter_counter_cats:self.__iter_counter_cats+9]:
@@ -152,13 +162,7 @@ class BotServer:
                 else:
                     self.__photo_from_pages_cats(user_id)
 
-    def __more_pets_in_iter(self, user_id):
-        self._vk.messages.send(
-            peer_id=user_id,
-            message='\n\n📌Если хотите увидеть больше питомцев напишите 🐕ЕЩЕ🐈 или наберите команду 🐕ПОМОЩЬ🐈 , '
-                    'чтобы вернуться в главное меню.\n',
-            random_id=get_random_id(),
-        )
+
 
 
 
