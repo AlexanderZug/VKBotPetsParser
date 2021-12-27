@@ -91,7 +91,3 @@ class PetsPagesDogs:
     def _get_out_dogs_img(self):
         for i in self.__img_parse_from_pages_dogs():
             return i
-
-
-# PetsPagesDogs(URL)._all_dogs_disc()  # type: ignore
-# PetsPagesDogs(URL)._get_out_dogs_img()

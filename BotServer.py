@@ -22,7 +22,6 @@ class BotServer:
                                      'ЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮ,Ё'))
         self.__par_cat = [i for i in PetsFinderCats(URL_CATS).get_content_cats()]
         self.__par_dog = [i for i in PetsFinderDogs(URL_DOGS).get_content_dogs()]
-        self.__user_query = []
         self.__cats_pages_content_disc = PetsPagesCats(URL_CATS)._all_cats_disc()
         self.__dogs_pages_content_disc = PetsPagesDogs(URL_DOGS)._all_dogs_disc()
         self.__cats_img = PetsPagesCats(URL_CATS)._get_out_cats_img()
@@ -32,12 +31,12 @@ class BotServer:
         self.__var_dog_content_photo = []
         self.__var_cat_photo_pages = []
         self.__var_dog_photo_pages = []
+        self.var_cats_more = []
+        self.__user_query = []
         self.__iter_counter_cats = 0
         self.__img_counter_pages_cats = 0
         self.__iter_counter_dogs = 0
         self.__img_counter_pages_dogs = 0
-        self.var_cats_more = []
-        self.dog_flag = bool
         print(len(self.__cats_pages_content_disc))
         print(len(self.__dogs_pages_content_disc))
         print('Бот запущен!')
@@ -165,6 +164,7 @@ class BotServer:
     def list_repaking_user_query(self):
         for user in self.__user_query:
             if user[1] == 1:
+                print(self.__user_query)
                 return True, user
             if user[1] == 2:
                 return False, user
@@ -200,7 +200,6 @@ class BotServer:
             self.__next_page_dogs(user_id, *self.__upload_photo(self.__upload, i))
             time.sleep(1)
         self.__more_pets_in_iter(user_id)
-        self.dog_flag = False
 
     def _more_pets_dogs(self, user_id):
         if not self.list_repaking_user_query()[0]:
