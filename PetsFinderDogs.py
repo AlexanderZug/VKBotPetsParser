@@ -36,7 +36,7 @@ class PetsFinderDogs:
             yield dogs_content
 
     @error_wrapper
-    def file_write_imf_first_page_dogs(self):
+    def file_write_img_first_page_dogs(self):
         soup = BeautifulSoup(self.__get_html(self.url).text, HTML_PARSER)
         dogs = soup.find_all('div', class_='card box')
         dog = []
