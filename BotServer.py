@@ -17,7 +17,7 @@ class BotServer:
     def __init__(self, longpoll, vk, upload):
         self.__longpoll = longpoll
         self._vk = vk
-        self.keyboard = VkKeyboard(one_time=False)
+        self.__keyboard = VkKeyboard(one_time=False)
         self.__char_table = dict(zip(map(ord, "qwertyuiop[]asdfghjkl;'zxcvbnm,./`"
                                               'QWERTYUIOP{}ASDFGHJKL:"ZXCVBNM<>?~'),
                                      "йцукенгшщзхъфывапролджэячсмитьбю.ё"
@@ -39,7 +39,7 @@ class BotServer:
         self.__img_counter_pages_cats = 0
         self.__iter_counter_dogs = 0
         self.__img_counter_pages_dogs = 0
-        self.keyboard_config()
+        self.__keyboard_config()
         print(len(self.__cats_pages_content_disc))
         print(len(self.__dogs_pages_content_disc))
         print('Бот запущен!')
@@ -59,13 +59,13 @@ class BotServer:
                 else:
                     self.__rectification(event.object.peer_id)
 
-    def keyboard_config(self):
-        self.keyboard.add_button(label='ПОМОЩЬ', color=VkKeyboardColor.PRIMARY)
-        self.keyboard.add_line()
-        self.keyboard.add_button(label='КОШКИ', color=VkKeyboardColor.POSITIVE)
-        self.keyboard.add_button(label='СОБАКИ', color=VkKeyboardColor.POSITIVE)
-        self.keyboard.add_line()
-        self.keyboard.add_button(label='ЕЩЕ', color=VkKeyboardColor.NEGATIVE)
+    def __keyboard_config(self):
+        self.__keyboard.add_button(label='ПОМОЩЬ', color=VkKeyboardColor.PRIMARY)
+        self.__keyboard.add_line()
+        self.__keyboard.add_button(label='КОШКИ', color=VkKeyboardColor.POSITIVE)
+        self.__keyboard.add_button(label='СОБАКИ', color=VkKeyboardColor.POSITIVE)
+        self.__keyboard.add_line()
+        self.__keyboard.add_button(label='ЕЩЕ', color=VkKeyboardColor.NEGATIVE)
 
     def _main_photo_content_cats(self, user_id):
         content_img_counter = 0
