@@ -56,6 +56,97 @@ class BotServer:
                 else:
                     self.__rectification(event.object.peer_id)
 
+    def _main_photo_content_cats(self, user_id):
+        content_img_counter = 0
+        for i in PetsFinderCats(URL_CATS).file_write_img_first_page_cats():
+            self.__var_cat_content_photo = self.__par_cat[0 + content_img_counter]
+            content_img_counter += 1
+            time.sleep(0.2)
+            self.__send_photo_content_cats(user_id, *self.__upload_photo(self.__upload, i))
+            time.sleep(1)
+        self.__more_pets_in_iter(user_id)
+        try:
+            for key, i in enumerate(self.__user_query):
+                if i[0] == user_id and i[1] == 2:
+                    self.__user_query[key][1] = 1
+                    self.__user_query[key][2] = 1
+                    break
+            else:
+                self.__user_query.append([user_id, 1, 1])
+        except Exception as var:
+            print(var)
+            self.__user_query.append([user_id, 1, 1])
+
+    def _main_photo_content_dogs(self, user_id):
+        content_img_counter_dog = 0
+        for i in PetsFinderDogs(URL_DOGS).file_write_img_first_page_dogs():
+            self.__var_dog_content_photo = self.__par_dog[0 + content_img_counter_dog]
+            content_img_counter_dog += 1
+            time.sleep(0.2)
+            self.__send_photo_content_dogs(user_id, *self.__upload_photo(self.__upload, i))
+            time.sleep(1)
+        self.__more_pets_in_iter(user_id)
+        try:
+            for key, i in enumerate(self.__user_query):
+                if i[0] == user_id and i[1] == 1:
+                    self.__user_query[key][1] = 2
+                    self.__user_query[key][2] = 1
+                    break
+            else:
+                self.__user_query.append([user_id, 2, 1])
+        except Exception as var:
+            print(var)
+            self.__user_query.append([user_id, 2, 1])
+
+    def list_repaking_user_query(self):
+        for user in self.__user_query:
+            if user[1] == 1:
+                return True, user
+            else:
+                return False, user
+
+    def __photo_from_pages_cats(self, user_id):
+        for i in self.__cats_img[self.__iter_counter_cats:self.__iter_counter_cats+9]:
+            self.__var_cat_photo_pages = self.__cats_pages_content_disc[0 + self.__img_counter_pages_cats]
+            self.__img_counter_pages_cats += 1
+            self.__iter_counter_cats += 1
+            time.sleep(0.2)
+            self.__next_page_cats(user_id, *self.__upload_photo(self.__upload, i))
+            time.sleep(1)
+        self.__more_pets_in_iter(user_id)
+
+    def _more_pets(self, user_id):
+        if self.list_repaking_user_query()[0]:
+            print(self.list_repaking_user_query())
+            self.list_repaking_user_query()[1][2] += 8
+            if self.list_repaking_user_query()[1][2] > len(self.__cats_img):
+                self.__not_more_pages(user_id)
+                del self.list_repaking_user_query()[1][2]
+            else:
+                self.__photo_from_pages_cats(user_id)
+        else:
+            self._more_pets_dogs(user_id)
+
+    def __photo_from_pages_dogs(self, user_id):
+        for i in self.__dogs_img[self.__iter_counter_dogs:self.__iter_counter_dogs+9]:
+            self.__var_dog_photo_pages = self.__dogs_pages_content_disc[0 + self.__img_counter_pages_dogs]
+            self.__img_counter_pages_dogs += 1
+            self.__iter_counter_dogs += 1
+            time.sleep(0.2)
+            self.__next_page_dogs(user_id, *self.__upload_photo(self.__upload, i))
+            time.sleep(1)
+        self.__more_pets_in_iter(user_id)
+
+    def _more_pets_dogs(self, user_id):
+        if not self.list_repaking_user_query()[0]:
+            print(self.list_repaking_user_query())
+            self.list_repaking_user_query()[1][2] += 8
+            if self.list_repaking_user_query()[1][2] > len(self.__dogs_img):
+                self.__not_more_pages(user_id)
+                del self.list_repaking_user_query()[1][2]
+            else:
+                self.__photo_from_pages_dogs(user_id)
+
     def command_help(self, user_id):
         bot_commands = [f'🐕 {value} 🐈 {self.list_commands[value]["description"]}' for number_iteration, value in
                         enumerate(self.list_commands) if value.find(UNVISIBLE_SEND_USER_ELEMENT) == -1]
@@ -138,79 +229,6 @@ class BotServer:
                     'чтобы вернуться в главное меню.\n',
             random_id=get_random_id(),
         )
-
-    def _main_photo_content_cats(self, user_id):
-        content_img_counter = 0
-        for i in PetsFinderCats(URL_CATS).file_write_img_first_page_cats():
-            self.__var_cat_content_photo = self.__par_cat[0 + content_img_counter]
-            content_img_counter += 1
-            time.sleep(0.2)
-            self.__send_photo_content_cats(user_id, *self.__upload_photo(self.__upload, i))
-            time.sleep(1)
-        self.__more_pets_in_iter(user_id)
-        self.__user_query.append([user_id, 1, 1])
-
-    def _main_photo_content_dogs(self, user_id):
-        content_img_counter_dog = 0
-        for i in PetsFinderDogs(URL_DOGS).file_write_img_first_page_dogs():
-            self.__var_dog_content_photo = self.__par_dog[0 + content_img_counter_dog]
-            content_img_counter_dog += 1
-            time.sleep(0.2)
-            self.__send_photo_content_dogs(user_id, *self.__upload_photo(self.__upload, i))
-            time.sleep(1)
-        self.__more_pets_in_iter(user_id)
-        self.__user_query.append([user_id, 2, 1])
-
-    def list_repaking_user_query(self):
-        for user in self.__user_query:
-            if user[1] == 1:
-                print(self.__user_query)
-                return True, user
-            if user[1] == 2:
-                return False, user
-
-    def __photo_from_pages_cats(self, user_id):
-        for i in self.__cats_img[self.__iter_counter_cats:self.__iter_counter_cats+9]:
-            self.__var_cat_photo_pages = self.__cats_pages_content_disc[0 + self.__img_counter_pages_cats]
-            self.__img_counter_pages_cats += 1
-            self.__iter_counter_cats += 1
-            time.sleep(0.2)
-            self.__next_page_cats(user_id, *self.__upload_photo(self.__upload, i))
-            time.sleep(1)
-        self.__more_pets_in_iter(user_id)
-
-    def _more_pets(self, user_id):
-        if self.list_repaking_user_query()[0]:
-            print(self.list_repaking_user_query())
-            self.list_repaking_user_query()[1][2] += 8
-            if self.list_repaking_user_query()[1][2] > len(self.__cats_img):
-                self.__not_more_pages(user_id)
-                del self.list_repaking_user_query()[1][2]
-            else:
-                self.__photo_from_pages_cats(user_id)
-        else:
-            self._more_pets_dogs(user_id)
-
-    def __photo_from_pages_dogs(self, user_id):
-        for i in self.__dogs_img[self.__iter_counter_dogs:self.__iter_counter_dogs+9]:
-            self.__var_dog_photo_pages = self.__dogs_pages_content_disc[0 + self.__img_counter_pages_dogs]
-            self.__img_counter_pages_dogs += 1
-            self.__iter_counter_dogs += 1
-            time.sleep(0.2)
-            self.__next_page_dogs(user_id, *self.__upload_photo(self.__upload, i))
-            time.sleep(1)
-        self.__more_pets_in_iter(user_id)
-
-    def _more_pets_dogs(self, user_id):
-        if not self.list_repaking_user_query()[0]:
-            print(self.list_repaking_user_query())
-            self.list_repaking_user_query()[1][2] += 8
-            if self.list_repaking_user_query()[1][2] > len(self.__dogs_img):
-                self.__not_more_pages(user_id)
-                del self.list_repaking_user_query()[1][2]
-            else:
-                self.__photo_from_pages_dogs(user_id)
-
 
 
 
