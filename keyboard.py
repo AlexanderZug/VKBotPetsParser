@@ -20,7 +20,7 @@ def keyboard_config(user_id):
         peer_id=user_id,
         random_id=get_random_id(),
         keyboard=keyboard.get_keyboard(),
-        message='*****🐕    🐈*****',
+        message='🐈*****🐕    🐈*****🐕',
     )
 
 
