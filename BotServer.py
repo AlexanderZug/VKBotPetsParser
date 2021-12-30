@@ -1,6 +1,6 @@
 import time
 from vk_api.bot_longpoll import VkBotEventType
-from vk_api.keyboard import VkKeyboard, VkKeyboardColor
+from keyboard import keyboard_config
 from vk_api.utils import get_random_id
 from PetsFinderCats import PetsFinderCats
 from PetsFinderDogs import PetsFinderDogs
@@ -64,6 +64,7 @@ class BotServer:
             peer_id=user_id,
             message=f'Здравствуйте! Я помогу Вам найти себе питомца в приютах Москвы!\n\n{bot_commands}',
             random_id=get_random_id(),
+            keyboard=keyboard_config(user_id),
         )
 
     def __rectification(self, user_id):
