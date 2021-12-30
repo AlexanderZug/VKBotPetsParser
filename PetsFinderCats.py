@@ -47,7 +47,7 @@ class PetsFinderCats:
                 'photo': one_cat.find('img').get('src'),
             })
             for img in cat:
-                with open(f"/Users/Polzovatel/Desktop/PycharmProjects/PetsFour/images/{img['name'] + '.jpg'}",
+                with open(f"images/{img['name'] + '.jpg'}",
                           'wb') as file:
                     for bit in requests.get(img['photo'], verify=False).iter_content():
                         file.write(bit)

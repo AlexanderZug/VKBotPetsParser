@@ -54,7 +54,7 @@ class PetsPagesCats:
                 'photo': one_cat.find('img').get('src'),
             })
             for img in cat:
-                with open(f"/Users/Polzovatel/Desktop/PycharmProjects/PetsFour/img_pages_cats/{img['name'] + '.jpg'}",
+                with open(f"img_pages_cats/{img['name'] + '.jpg'}",
                           'wb') as file:
                     for bit in requests.get(img['photo'], verify=False).iter_content():
                         file.write(bit)
