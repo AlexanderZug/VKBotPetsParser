@@ -17,7 +17,6 @@ class BotServer:
     def __init__(self, longpoll, vk, upload):
         self.__longpoll = longpoll
         self._vk = vk
-        self.__keyboard = VkKeyboard(one_time=False)
         self.__char_table = dict(zip(map(ord, "qwertyuiop[]asdfghjkl;'zxcvbnm,./`"
                                               'QWERTYUIOP{}ASDFGHJKL:"ZXCVBNM<>?~'),
                                      "йцукенгшщзхъфывапролджэячсмитьбю.ё"
@@ -33,13 +32,11 @@ class BotServer:
         self.__var_dog_content_photo = []
         self.__var_cat_photo_pages = []
         self.__var_dog_photo_pages = []
-        self.var_cats_more = []
         self.__user_query = []
         self.__iter_counter_cats = 0
         self.__img_counter_pages_cats = 0
         self.__iter_counter_dogs = 0
         self.__img_counter_pages_dogs = 0
-        self.__keyboard_config()
         print(len(self.__cats_pages_content_disc))
         print(len(self.__dogs_pages_content_disc))
         print('Бот запущен!')
@@ -59,13 +56,25 @@ class BotServer:
                 else:
                     self.__rectification(event.object.peer_id)
 
-    def __keyboard_config(self):
-        self.__keyboard.add_button(label='ПОМОЩЬ', color=VkKeyboardColor.PRIMARY)
-        self.__keyboard.add_line()
-        self.__keyboard.add_button(label='КОШКИ', color=VkKeyboardColor.POSITIVE)
-        self.__keyboard.add_button(label='СОБАКИ', color=VkKeyboardColor.POSITIVE)
-        self.__keyboard.add_line()
-        self.__keyboard.add_button(label='ЕЩЕ', color=VkKeyboardColor.NEGATIVE)
+    def command_help(self, user_id):
+        bot_commands = [f'🐕 {value} 🐈 {self.list_commands[value]["description"]}' for number_iteration, value in
+                        enumerate(self.list_commands) if value.find(UNVISIBLE_SEND_USER_ELEMENT) == -1]
+        bot_commands = '\n\n'.join(bot_commands)
+        self._vk.messages.send(
+            peer_id=user_id,
+            message=f'Здравствуйте! Я помогу Вам найти себе питомца в приютах Москвы!\n\n{bot_commands}',
+            random_id=get_random_id(),
+        )
+
+    def __rectification(self, user_id):
+        bot_commands = [f'🐕 {value} 🐈 {self.list_commands[value]["description"]}' for number_iteration, value in
+                        enumerate(self.list_commands) if value.find(' --noshow') == -1]
+        bot_commands = '\n\n'.join(bot_commands)
+        self._vk.messages.send(
+            peer_id=user_id,
+            message=f'Я не совсем Вас понял... Посмотрите, что я умею и выберите подходящий вариант: \n\n{bot_commands}',
+            random_id=get_random_id(),
+        )
 
     def _main_photo_content_cats(self, user_id):
         content_img_counter = 0
@@ -117,7 +126,7 @@ class BotServer:
                 return False, user
 
     def __photo_from_pages_cats(self, user_id):
-        for i in self.__cats_img[self.__iter_counter_cats:self.__iter_counter_cats+9]:
+        for i in self.__cats_img[self.__iter_counter_cats:self.__iter_counter_cats + 9]:
             self.__var_cat_photo_pages = self.__cats_pages_content_disc[0 + self.__img_counter_pages_cats]
             self.__img_counter_pages_cats += 1
             self.__iter_counter_cats += 1
@@ -128,7 +137,6 @@ class BotServer:
 
     def _more_pets(self, user_id):
         if self.list_repaking_user_query()[0]:
-            print(self.list_repaking_user_query())
             self.list_repaking_user_query()[1][2] += 8
             if self.list_repaking_user_query()[1][2] > len(self.__cats_img):
                 self.__not_more_pages(user_id)
@@ -139,7 +147,7 @@ class BotServer:
             self._more_pets_dogs(user_id)
 
     def __photo_from_pages_dogs(self, user_id):
-        for i in self.__dogs_img[self.__iter_counter_dogs:self.__iter_counter_dogs+9]:
+        for i in self.__dogs_img[self.__iter_counter_dogs:self.__iter_counter_dogs + 9]:
             self.__var_dog_photo_pages = self.__dogs_pages_content_disc[0 + self.__img_counter_pages_dogs]
             self.__img_counter_pages_dogs += 1
             self.__iter_counter_dogs += 1
@@ -157,27 +165,6 @@ class BotServer:
                 del self.list_repaking_user_query()[1][2]
             else:
                 self.__photo_from_pages_dogs(user_id)
-
-    def command_help(self, user_id):
-        bot_commands = [f'🐕 {value} 🐈 {self.list_commands[value]["description"]}' for number_iteration, value in
-                        enumerate(self.list_commands) if value.find(UNVISIBLE_SEND_USER_ELEMENT) == -1]
-        bot_commands = '\n\n'.join(bot_commands)
-        self._vk.messages.send(
-            peer_id=user_id,
-            message=f'Здравствуйте! Я помогу Вам найти себе питомца в приютах Москвы!\n\n{bot_commands}',
-            keyboard=self.keyboard.get_keyboard(),
-            random_id=get_random_id(),
-        )
-
-    def __rectification(self, user_id):
-        bot_commands = [f'🐕 {value} 🐈 {self.list_commands[value]["description"]}' for number_iteration, value in
-                        enumerate(self.list_commands) if value.find(' --noshow') == -1]
-        bot_commands = '\n\n'.join(bot_commands)
-        self._vk.messages.send(
-            peer_id=user_id,
-            message=f'Я не совсем Вас понял... Посмотрите, что я умею и выберите подходящий вариант: \n\n{bot_commands}',
-            random_id=get_random_id(),
-        )
 
     def __upload_photo(self, upload, photo):
         response = upload.photo_messages(photo)[0]
@@ -241,7 +228,3 @@ class BotServer:
                     'чтобы вернуться в главное меню.\n',
             random_id=get_random_id(),
         )
-
-
-
-
