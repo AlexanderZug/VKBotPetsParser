@@ -72,8 +72,7 @@ class PetsPagesCats:
             yield all_pages
 
     def _all_cats_disc(self):
-        for i in self._parse_cats():
-            return i
+        return list(self._parse_cats())[0]
 
     def __img_parse_from_pages_cats(self):
         html = self.__get_html(self.url)
@@ -87,5 +86,5 @@ class PetsPagesCats:
             yield all_pages
 
     def _get_out_cats_img(self):
-        for i in self.__img_parse_from_pages_cats():
-            return i
+        return list(self.__img_parse_from_pages_cats())[0]
+
