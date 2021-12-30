@@ -56,7 +56,7 @@ class BotServer:
                 else:
                     self.__rectification(event.object.peer_id)
 
-    def command_help(self, user_id):
+    def _command_help(self, user_id):
         bot_commands = [f'🐕 {value} 🐈 {self.list_commands[value]["description"]}' for number_iteration, value in
                         enumerate(self.list_commands) if value.find(UNVISIBLE_SEND_USER_ELEMENT) == -1]
         bot_commands = '\n\n'.join(bot_commands)
@@ -119,7 +119,7 @@ class BotServer:
             print(var)
             self.__user_query.append([user_id, 2, 1])
 
-    def list_repaking_user_query(self):
+    def __list_repaking_user_query(self):
         for user in self.__user_query:
             if user[1] == 1:
                 return True, user
@@ -137,15 +137,15 @@ class BotServer:
         self.__more_pets_in_iter(user_id)
 
     def _more_pets(self, user_id):
-        if self.list_repaking_user_query()[0]:
-            self.list_repaking_user_query()[1][2] += 8
-            if self.list_repaking_user_query()[1][2] > len(self.__cats_img):
+        if self.__list_repaking_user_query()[0]:
+            self.__list_repaking_user_query()[1][2] += 8
+            if self.__list_repaking_user_query()[1][2] > len(self.__cats_img):
                 self.__not_more_pages(user_id)
-                del self.list_repaking_user_query()[1][2]
+                del self.__list_repaking_user_query()[1][2]
             else:
                 self.__photo_from_pages_cats(user_id)
         else:
-            self._more_pets_dogs(user_id)
+            self.__more_pets_dogs(user_id)
 
     def __photo_from_pages_dogs(self, user_id):
         for i in self.__dogs_img[self.__iter_counter_dogs:self.__iter_counter_dogs + 9]:
@@ -157,13 +157,12 @@ class BotServer:
             time.sleep(1)
         self.__more_pets_in_iter(user_id)
 
-    def _more_pets_dogs(self, user_id):
-        if not self.list_repaking_user_query()[0]:
-            print(self.list_repaking_user_query())
-            self.list_repaking_user_query()[1][2] += 8
-            if self.list_repaking_user_query()[1][2] > len(self.__dogs_img):
+    def __more_pets_dogs(self, user_id):
+        if not self.__list_repaking_user_query()[0]:
+            self.__list_repaking_user_query()[1][2] += 8
+            if self.__list_repaking_user_query()[1][2] > len(self.__dogs_img):
                 self.__not_more_pages(user_id)
-                del self.list_repaking_user_query()[1][2]
+                del self.__list_repaking_user_query()[1][2]
             else:
                 self.__photo_from_pages_dogs(user_id)
 
