@@ -1,4 +1,4 @@
-from decorators import error_wrapper
+from decorators import error_handler
 from bs4 import BeautifulSoup
 import requests
 
@@ -13,14 +13,9 @@ class PetsFinderDogs:
         self.url = url
         self.host = HOST
 
-    @error_wrapper
-    def __get_html(self, params=None):
-        r = requests.get(self.url, params=params, verify=False)
-        return r
-
-
+    @error_handler
     def get_content_dogs(self):
-        soup = BeautifulSoup(self.__get_html(self.url).text, HTML_PARSER)
+        soup = BeautifulSoup(requests.get(self.url, verify=False).text, HTML_PARSER)
         dogs = soup.find_all('div', class_='card box')
         dog = []
         for one_dog in dogs:
@@ -35,9 +30,9 @@ class PetsFinderDogs:
                            f"🐕🐕🐕ССЫЛКА: {v['link']}"
             yield dogs_content
 
-    @error_wrapper
+    @error_handler
     def file_write_img_first_page_dogs(self):
-        soup = BeautifulSoup(self.__get_html(self.url).text, HTML_PARSER)
+        soup = BeautifulSoup(requests.get(self.url, verify=False).text, HTML_PARSER)
         dogs = soup.find_all('div', class_='card box')
         dog = []
         for one_dog in dogs:

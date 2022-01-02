@@ -1,5 +1,5 @@
 
-from decorators import error_wrapper
+from decorators import error_handler
 from bs4 import BeautifulSoup
 import requests
 requests.packages.urllib3.disable_warnings()
@@ -15,13 +15,9 @@ class PetsFinderCats:
         self.url = url
         self.host = HOST
 
-    @error_wrapper
-    def __get_html(self, params=None):
-        r = requests.get(self.url, params=params, verify=False)
-        return r
-
+    @error_handler
     def get_content_cats(self):
-        soup = BeautifulSoup(self.__get_html(self.url).text, HTML_PARSER)
+        soup = BeautifulSoup(requests.get(self.url, verify=False).text, HTML_PARSER)
         cats = soup.find_all('div', class_='card box')
         cat = []
         for one_cat in cats:
@@ -36,9 +32,9 @@ class PetsFinderCats:
                            f"🐈🐈🐈ССЫЛКА: {v['link']}"
             yield cats_content
 
-    @error_wrapper
+    @error_handler
     def file_write_img_first_page_cats(self):
-        soup = BeautifulSoup(self.__get_html(self.url).text, HTML_PARSER)
+        soup = BeautifulSoup(requests.get(self.url, verify=False).text, HTML_PARSER)
         cats = soup.find_all('div', class_='card box')
         cat = []
         for one_cat in cats:

@@ -1,5 +1,5 @@
 
-def error_wrapper(func):
+def error_handler(func):
     def wrapper(*args, **kvargs):
         try:
             return func(*args, **kvargs)
