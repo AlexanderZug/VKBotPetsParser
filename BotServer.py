@@ -6,6 +6,7 @@ from PetsFinderCats import PetsFinderCats
 from PetsFinderDogs import PetsFinderDogs
 from Cats_pages import PetsPagesCats
 from Dogs_pages import PetsPagesDogs
+import threading
 
 URL_CATS = 'https://izpriuta.ru/koshki'
 URL_DOGS = 'https://izpriuta.ru/sobaki'
@@ -51,10 +52,14 @@ class BotServer:
                 msg = event.object.text.upper().translate(self.__char_table)
                 for command in self.list_commands:
                     if command.replace(UNVISIBLE_SEND_USER_ELEMENT, '') == msg:
-                        self.list_commands[command]['function'](event.object.peer_id)
+                        thr = threading.Thread(target=self.__command_worker, args=(command, event,))
+                        thr.start()
                         break
                 else:
                     self.__rectification(event.object.peer_id)
+
+    def __command_worker(self, command, event):
+        self.list_commands[command]['function'](event.object.peer_id)
 
     def _command_help(self, user_id):
         bot_commands = [f'🐕 {value} 🐈 {self.list_commands[value]["description"]}' for number_iteration, value in
