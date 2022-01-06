@@ -82,13 +82,16 @@ class BotServer:
 
     def _main_photo_content_cats(self, user_id):
         content_img_counter = 0
-        for i in PetsFinderCats(URL_CATS).file_write_img_first_page_cats():
+        for i in PetsFinderCats(URL_CATS).send_photos_in_dir():
             self.__var_cat_content_photo = self.__par_cat[0 + content_img_counter]
             content_img_counter += 1
             time.sleep(0.2)
             self.__send_photo_content_cats(user_id, *self.__upload_photo(self.__upload, i))
             time.sleep(1)
         self.__more_pets_in_iter(user_id)
+        self.__dogs_or_cats_more(user_id, 1)
+
+    def __dogs_or_cats_more(self, user_id, pets_type):
         try:
             for key, i in enumerate(self.__user_query):
                 if i[0] == user_id and i[1] == 2:
@@ -96,7 +99,7 @@ class BotServer:
                     self.__user_query[key][2] = 1
                     break
             else:
-                self.__user_query.append([user_id, 1, 1])
+                self.__user_query.append([user_id, pets_type, 1])
         except Exception as var:
             print(var)
             self.__user_query.append([user_id, 1, 1])
@@ -110,17 +113,7 @@ class BotServer:
             self.__send_photo_content_dogs(user_id, *self.__upload_photo(self.__upload, i))
             time.sleep(1)
         self.__more_pets_in_iter(user_id)
-        try:
-            for key, i in enumerate(self.__user_query):
-                if i[0] == user_id and i[1] == 1:
-                    self.__user_query[key][1] = 2
-                    self.__user_query[key][2] = 1
-                    break
-            else:
-                self.__user_query.append([user_id, 2, 1])
-        except Exception as var:
-            print(var)
-            self.__user_query.append([user_id, 2, 1])
+        self.__dogs_or_cats_more(user_id, 2)
 
     def __list_repaking_user_query(self):
         for user in self.__user_query:

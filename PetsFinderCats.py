@@ -1,9 +1,8 @@
-
 from decorators import error_handler
 from bs4 import BeautifulSoup
 import requests
-requests.packages.urllib3.disable_warnings()
 
+requests.packages.urllib3.disable_warnings()
 
 HOST = 'https://izpriuta.ru'
 HTML_PARSER = 'html.parser'
@@ -20,7 +19,7 @@ class PetsFinderCats:
         cats = soup.find_all('div', class_='card box')
         cat = []
         for one_cat in cats:
-           cat.append({
+            cat.append({
                 'name': one_cat.find('h2', class_='cx8').get_text(),
                 'gender': one_cat.find('span', class_='gender cx4').get_text(),
                 'description': one_cat.find('div', class_='h4').get_text(),
@@ -44,10 +43,12 @@ class PetsFinderCats:
                 'name': one_cat.find('h2', class_='cx8').get_text(),
                 'photo': one_cat.find('img').get('src'),
             })
-            for img in cat:
-                with open(f"images/{img['name'] + '.jpg'}",
-                          'wb') as file:
-                    for bit in requests.get(img['photo'], verify=False).iter_content():
-                        file.write(bit)
-            yield file.name
+        return cat
 
+    def send_photos_in_dir(self):
+        for img in self.file_write_img_first_page_cats():
+            with open(f"images/{img['name'] + '.jpg'}",
+                      'wb') as file:
+                for bit in requests.get(img['photo'], verify=False).iter_content():
+                    file.write(bit)
+            yield file.name

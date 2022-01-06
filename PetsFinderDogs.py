@@ -21,18 +21,10 @@ class PetsFinderDogs:
 
     @error_handler
     def file_write_img_first_page_dogs(self):
-        soup = BeautifulSoup(requests.get(self.url, verify=False).text, HTML_PARSER)
-        dogs = soup.find_all('div', class_='card box')
-        dog = []
-        for one_dog in dogs:
-            dog.append({
-                'name': one_dog.find('h2', class_='cx8').get_text(),
-                'photo': one_dog.find('img').get('src'),
-            })
-            for img in dog:
-                with open(f"imagestwo/{img['name'] + '.jpg'}",
-                          'wb') as file:
-                    for bit in requests.get(img['photo'], verify=False).iter_content():
-                        file.write(bit)
+        for img in PetsFinderCats(URL_DOGS).file_write_img_first_page_cats():
+            with open(f"imagestwo/{img['name'] + '.jpg'}",
+                      'wb') as file:
+                for bit in requests.get(img['photo'], verify=False).iter_content():
+                    file.write(bit)
             yield file.name
 
