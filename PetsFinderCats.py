@@ -25,10 +25,10 @@ class PetsFinderCats:
                 'description': one_cat.find('div', class_='h4').get_text(),
                 'link': HOST + one_cat.find('a', class_='с-red hover').get('href'),
             })
-        return cat
+        yield cat
 
     def disc_cats(self):
-        for v in self.get_content_cats():
+        for v in list(self.get_content_cats())[0]:
             cats_content = f"\n\n🐱ИМЯ: {v['name']} \n😸ПОЛ: {v['gender']} \n🐱ОПИСАНИЕ: {v['description']} \n" \
                            f"🐈🐈🐈ССЫЛКА: {v['link']}"
             yield cats_content
@@ -43,10 +43,10 @@ class PetsFinderCats:
                 'name': one_cat.find('h2', class_='cx8').get_text(),
                 'photo': one_cat.find('img').get('src'),
             })
-        return cat
+        yield cat
 
     def send_photos_in_dir(self):
-        for img in self.file_write_img_first_page_cats():
+        for img in list(self.file_write_img_first_page_cats())[0]:
             with open(f"images/{img['name'] + '.jpg'}",
                       'wb') as file:
                 for bit in requests.get(img['photo'], verify=False).iter_content():

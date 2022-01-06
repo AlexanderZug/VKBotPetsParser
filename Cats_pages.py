@@ -2,6 +2,7 @@ from decorators import error_handler
 from bs4 import BeautifulSoup
 import requests
 
+
 HOST = 'https://izpriuta.ru'
 HTML_PARSER = 'html.parser'
 
@@ -21,7 +22,7 @@ class PetsPagesCats:
             max_pag = [i for i in pag if i.isdigit()]
             return max(max_pag)
 
-    def __get_content_cats_pages(self, html):
+    def _get_content_cats_pages(self, html):
         soup = BeautifulSoup(html, HTML_PARSER)
         cats = soup.find_all('div', class_='card box')
         cat = []
@@ -62,7 +63,7 @@ class PetsPagesCats:
             int_pages = int(pages)
             for page in range(1, int_pages):
                 html = requests.get(self.url, params={'page': page})
-                all_pages.extend([i for i in self.__get_content_cats_pages(html.text)])
+                all_pages.extend([i for i in self._get_content_cats_pages(html.text)])
             yield all_pages
 
     def _all_cats_disc(self):

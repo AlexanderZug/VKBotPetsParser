@@ -1,5 +1,4 @@
 from decorators import error_handler
-from bs4 import BeautifulSoup
 import requests
 from PetsFinderCats import PetsFinderCats
 
@@ -14,14 +13,14 @@ class PetsFinderDogs:
 
     @error_handler
     def get_content_dogs(self):
-        for v in PetsFinderCats(URL_DOGS).get_content_cats():
+        for v in list(PetsFinderCats(URL_DOGS).get_content_cats())[0]:
             dogs_content = f"\n\n🐶ИМЯ: {v['name']} \n🐺ПОЛ: {v['gender']} \n🐶ОПИСАНИЕ: {v['description']} \n" \
                            f"🐕🐕🐕ССЫЛКА: {v['link']}"
             yield dogs_content
 
     @error_handler
     def file_write_img_first_page_dogs(self):
-        for img in PetsFinderCats(URL_DOGS).file_write_img_first_page_cats():
+        for img in list(PetsFinderCats(URL_DOGS).file_write_img_first_page_cats())[0]:
             with open(f"imagestwo/{img['name'] + '.jpg'}",
                       'wb') as file:
                 for bit in requests.get(img['photo'], verify=False).iter_content():

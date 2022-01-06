@@ -13,22 +13,6 @@ class PetsPagesDogs:
     def __init__(self, url):
         self.url = url
 
-    def __get_content_dogs_pages(self, html):
-        soup = BeautifulSoup(html, HTML_PARSER)
-        dogs = soup.find_all('div', class_='card box')
-        dog = []
-        for one_dog in dogs:
-            dog.append({
-                'name': one_dog.find('h2', class_='cx8').get_text(),
-                'gender': one_dog.find('span', class_='gender cx4').get_text(),
-                'description': one_dog.find('div', class_='h4').get_text(),
-                'link': HOST + one_dog.find('a', class_='с-red hover').get('href'),
-            })
-        for v in dog:
-            dogs_content = f"\n\n🐱ИМЯ: {v['name']} \n😸ПОЛ: {v['gender']} \n🐱ОПИСАНИЕ: {v['description']} \n" \
-                           f"🐈🐈🐈ССЫЛКА: {v['link']}"
-            yield dogs_content
-
     @error_handler
     def __file_write_img_dogs(self, html):
         soup = BeautifulSoup(html, HTML_PARSER)
@@ -54,7 +38,7 @@ class PetsPagesDogs:
             int_pages = int(pages)
             for page in range(1, int_pages):
                 html = requests.get(self.url, params={'page': page})
-                all_pages.extend([i for i in self.__get_content_dogs_pages(html.text)])
+                all_pages.extend([i for i in PetsPagesCats(URL)._get_content_cats_pages(html.text)])
             yield all_pages
 
     def _all_dogs_disc(self):

@@ -85,7 +85,7 @@ class BotServer:
         for i in PetsFinderCats(URL_CATS).send_photos_in_dir():
             self.__var_cat_content_photo = self.__par_cat[0 + content_img_counter]
             content_img_counter += 1
-            time.sleep(0.2)
+            time.sleep(0.2) # It is !!!!
             self.__send_photo_content_cats(user_id, *self.__upload_photo(self.__upload, i))
             time.sleep(1)
         self.__more_pets_in_iter(user_id)
