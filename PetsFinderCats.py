@@ -13,7 +13,6 @@ class PetsFinderCats:
 
     def __init__(self, url):
         self.url = url
-        self.host = HOST
 
     @error_handler
     def get_content_cats(self):
@@ -21,13 +20,16 @@ class PetsFinderCats:
         cats = soup.find_all('div', class_='card box')
         cat = []
         for one_cat in cats:
-            cat.append({
+           cat.append({
                 'name': one_cat.find('h2', class_='cx8').get_text(),
                 'gender': one_cat.find('span', class_='gender cx4').get_text(),
                 'description': one_cat.find('div', class_='h4').get_text(),
-                'link': self.host + one_cat.find('a', class_='с-red hover').get('href'),
+                'link': HOST + one_cat.find('a', class_='с-red hover').get('href'),
             })
-        for v in cat:
+        return cat
+
+    def disc_cats(self):
+        for v in self.get_content_cats():
             cats_content = f"\n\n🐱ИМЯ: {v['name']} \n😸ПОЛ: {v['gender']} \n🐱ОПИСАНИЕ: {v['description']} \n" \
                            f"🐈🐈🐈ССЫЛКА: {v['link']}"
             yield cats_content

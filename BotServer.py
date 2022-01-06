@@ -22,7 +22,7 @@ class BotServer:
                                               'QWERTYUIOP{}ASDFGHJKL:"ZXCVBNM<>?~'),
                                      "йцукенгшщзхъфывапролджэячсмитьбю.ё"
                                      'ЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮ,Ё'))
-        self.__par_cat = [i for i in PetsFinderCats(URL_CATS).get_content_cats()]
+        self.__par_cat = [i for i in PetsFinderCats(URL_CATS).disc_cats()]
         self.__par_dog = [i for i in PetsFinderDogs(URL_DOGS).get_content_dogs()]
         self.__cats_pages_content_disc = PetsPagesCats(URL_CATS)._all_cats_disc()
         self.__dogs_pages_content_disc = PetsPagesDogs(URL_DOGS)._all_dogs_disc()
