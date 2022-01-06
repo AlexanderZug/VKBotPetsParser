@@ -55,6 +55,7 @@ class PetsPagesCats:
                         file.write(bit)
             yield file.name
 
+    @error_handler
     def _parse_cats(self):
         html = requests.get(self.url, params=None, verify=False)
         if html.status_code == 200:
@@ -66,10 +67,8 @@ class PetsPagesCats:
                 all_pages.extend([i for i in self._get_content_cats_pages(html.text)])
             yield all_pages
 
-    def _all_cats_disc(self):
-        return list(self._parse_cats())[0]
-
-    def __img_parse_from_pages_cats(self):
+    @error_handler
+    def _img_parse_from_pages_cats(self):
         html = requests.get(self.url)
         if html.status_code == 200:
             all_pages = []
@@ -80,5 +79,3 @@ class PetsPagesCats:
                 all_pages.extend([i for i in self.__file_write_img_cats(html.text)])
             yield all_pages
 
-    def _get_out_cats_img(self):
-        return list(self.__img_parse_from_pages_cats())[0]

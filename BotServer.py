@@ -24,9 +24,9 @@ class BotServer:
                                      'ЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮ,Ё'))
         self.__par_cat = [i for i in PetsFinderCats(URL_CATS).disc_cats()]
         self.__par_dog = [i for i in PetsFinderDogs(URL_DOGS).get_content_dogs()]
-        self.__cats_pages_content_disc = PetsPagesCats(URL_CATS)._all_cats_disc()
+        self.__cats_pages_content_disc = list(PetsPagesCats(URL_CATS)._parse_cats())[0]
         self.__dogs_pages_content_disc = PetsPagesDogs(URL_DOGS)._all_dogs_disc()
-        self.__cats_img = PetsPagesCats(URL_CATS)._get_out_cats_img()
+        self.__cats_img = list(PetsPagesCats(URL_CATS)._img_parse_from_pages_cats())[0]
         self.__dogs_img = PetsPagesDogs(URL_DOGS)._get_out_dogs_img()
         self.__upload = upload
         self.__var_cat_content_photo = []
