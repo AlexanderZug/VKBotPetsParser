@@ -3,7 +3,6 @@ from bs4 import BeautifulSoup
 import requests
 
 HOST = 'https://izpriuta.ru'
-URL = 'https://izpriuta.ru/koshki'
 HTML_PARSER = 'html.parser'
 
 
@@ -12,7 +11,7 @@ class PetsPagesCats:
     def __init__(self, url):
         self.url = url
 
-    def _pages_count_cats(self, html=None):
+    def pages_count_cats(self, html=None):
         if not html:
             html = requests.get(self.url).text
         soup = BeautifulSoup(html, HTML_PARSER)
@@ -59,7 +58,7 @@ class PetsPagesCats:
         html = requests.get(self.url, params=None, verify=False)
         if html.status_code == 200:
             all_pages = []
-            pages = self._pages_count_cats(html.text)
+            pages = self.pages_count_cats(html.text)
             int_pages = int(pages)
             for page in range(1, int_pages):
                 html = requests.get(self.url, params={'page': page})
@@ -73,7 +72,7 @@ class PetsPagesCats:
         html = requests.get(self.url)
         if html.status_code == 200:
             all_pages = []
-            pages = self._pages_count_cats(html.text)
+            pages = self.pages_count_cats(html.text)
             int_pages = int(pages)
             for page in range(1, int_pages):
                 html = requests.get(self.url, params={'page': page})

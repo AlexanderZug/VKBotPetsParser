@@ -3,7 +3,6 @@ from bs4 import BeautifulSoup
 from Cats_pages import PetsPagesCats
 import requests
 
-
 HOST = 'https://izpriuta.ru'
 URL = 'https://izpriuta.ru/sobaki'
 HTML_PARSER = 'html.parser'
@@ -13,16 +12,6 @@ class PetsPagesDogs:
 
     def __init__(self, url):
         self.url = url
-
-    def __pages_count_dogs(self, html=None):
-        if not html:
-            html = requests.get(self.url).text
-        soup = BeautifulSoup(html, HTML_PARSER)
-        pagination = soup.find_all('ul', class_='pager')
-        if pagination:
-            pag = pagination[-1].get_text().split('\n')
-            max_pag = [i for i in pag if i.isdigit()]
-            return max(max_pag)
 
     def __get_content_dogs_pages(self, html):
         soup = BeautifulSoup(html, HTML_PARSER)
@@ -61,7 +50,7 @@ class PetsPagesDogs:
         html = requests.get(self.url)
         if html.status_code == 200:
             all_pages = []
-            pages = self.__pages_count_dogs(html.text)
+            pages = PetsPagesCats(URL).pages_count_cats(html.text)
             int_pages = int(pages)
             for page in range(1, int_pages):
                 html = requests.get(self.url, params={'page': page})
@@ -75,7 +64,7 @@ class PetsPagesDogs:
         html = requests.get(self.url)
         if html.status_code == 200:
             all_pages = []
-            pages = self.__pages_count_dogs(html.text)
+            pages = PetsPagesCats(URL).pages_count_cats(html.text)
             int_pages = int(pages)
             for page in range(1, int_pages):
                 html = requests.get(self.url, params={'page': page})
@@ -84,4 +73,3 @@ class PetsPagesDogs:
 
     def _get_out_dogs_img(self):
         return list(self.__img_parse_from_pages_dogs())[0]
-

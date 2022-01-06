@@ -38,8 +38,6 @@ class BotServer:
         self.__img_counter_pages_cats = 0
         self.__iter_counter_dogs = 0
         self.__img_counter_pages_dogs = 0
-        print(len(self.__cats_pages_content_disc))
-        print(len(self.__dogs_pages_content_disc))
         print('Бот запущен!')
 
     def _in_process(self, list_commands):

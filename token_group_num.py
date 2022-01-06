@@ -1,2 +1,4 @@
-TOKEN = '04cba958eb1393fa7f74693b4532cb9ca782575fb7f121a3042b37401c3d2edd88d434513573478f442de'
-VK_GROUP_NUM = 209054655
+import os
+
+TOKEN = os.environ.get('TOKEN')
+VK_GROUP_NUM = os.environ.get('GROUP_ID')
