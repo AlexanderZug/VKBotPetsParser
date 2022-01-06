@@ -39,23 +39,6 @@ class PetsPagesCats:
             yield cats_content
 
     @error_handler
-    def __file_write_img_cats(self, html):
-        soup = BeautifulSoup(html, HTML_PARSER)
-        cats = soup.find_all('div', class_='card box')
-        cat = []
-        for one_cat in cats:
-            cat.append({
-                'name': one_cat.find('h2', class_='cx8').get_text(),
-                'photo': one_cat.find('img').get('src'),
-            })
-            for img in cat:
-                with open(f"img_pages_cats/{img['name'] + '.jpg'}",
-                          'wb') as file:
-                    for bit in requests.get(img['photo'], verify=False).iter_content():
-                        file.write(bit)
-            yield file.name
-
-    @error_handler
     def _parse_cats(self):
         html = requests.get(self.url, params=None, verify=False)
         if html.status_code == 200:
@@ -78,4 +61,21 @@ class PetsPagesCats:
                 html = requests.get(self.url, params={'page': page})
                 all_pages.extend([i for i in self.__file_write_img_cats(html.text)])
             yield all_pages
+
+    @error_handler
+    def __file_write_img_cats(self, html):
+        soup = BeautifulSoup(html, HTML_PARSER)
+        cats = soup.find_all('div', class_='card box')
+        cat = []
+        for one_cat in cats:
+            cat.append({
+                'name': one_cat.find('h2', class_='cx8').get_text(),
+                'photo': one_cat.find('img').get('src'),
+            })
+            for img in cat:
+                with open(f"img_pages_cats/{img['name'] + '.jpg'}",
+                          'wb') as file:
+                    for bit in requests.get(img['photo'], verify=False).iter_content():
+                        file.write(bit)
+            yield file.name
 

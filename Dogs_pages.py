@@ -14,23 +14,6 @@ class PetsPagesDogs:
         self.url = url
 
     @error_handler
-    def __file_write_img_dogs(self, html):
-        soup = BeautifulSoup(html, HTML_PARSER)
-        dogs = soup.find_all('div', class_='card box')
-        dog = []
-        for one_dog in dogs:
-            dog.append({
-                'name': one_dog.find('h2', class_='cx8').get_text(),
-                'photo': one_dog.find('img').get('src'),
-            })
-            for img in dog:
-                with open(f"img_pages_dogs/{img['name'] + '.jpg'}",
-                          'wb') as file:
-                    for bit in requests.get(img['photo'], verify=False).iter_content():
-                        file.write(bit)
-            yield file.name
-
-    @error_handler
     def _parse_dogs(self):
         html = requests.get(self.url)
         if html.status_code == 200:
@@ -53,3 +36,20 @@ class PetsPagesDogs:
                 html = requests.get(self.url, params={'page': page})
                 all_pages.extend([i for i in self.__file_write_img_dogs(html.text)])
             yield all_pages
+
+    @error_handler
+    def __file_write_img_dogs(self, html):
+        soup = BeautifulSoup(html, HTML_PARSER)
+        dogs = soup.find_all('div', class_='card box')
+        dog = []
+        for one_dog in dogs:
+            dog.append({
+                'name': one_dog.find('h2', class_='cx8').get_text(),
+                'photo': one_dog.find('img').get('src'),
+            })
+            for img in dog:
+                with open(f"img_pages_dogs/{img['name'] + '.jpg'}",
+                          'wb') as file:
+                    for bit in requests.get(img['photo'], verify=False).iter_content():
+                        file.write(bit)
+            yield file.name
