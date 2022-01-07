@@ -1,5 +1,4 @@
 from decorators import error_handler
-from bs4 import BeautifulSoup
 from Cats_pages import PetsPagesCats
 import requests
 
@@ -22,7 +21,7 @@ class PetsPagesDogs:
             int_pages = int(pages)
             for page in range(1, int_pages):
                 html = requests.get(self.url, params={'page': page})
-                all_pages.extend([i for i in PetsPagesCats(URL)._get_content_cats_pages(html.text)])
+                all_pages.extend([i for i in PetsPagesCats(URL).get_content_cats_pages(html.text)])
             yield all_pages
 
     @error_handler
@@ -34,22 +33,14 @@ class PetsPagesDogs:
             int_pages = int(pages)
             for page in range(1, int_pages):
                 html = requests.get(self.url, params={'page': page})
-                all_pages.extend([i for i in self.__file_write_img_dogs(html.text)])
+                all_pages.extend([i for i in self.photo_writer(html.text)])
             yield all_pages
 
     @error_handler
-    def __file_write_img_dogs(self, html):
-        soup = BeautifulSoup(html, HTML_PARSER)
-        dogs = soup.find_all('div', class_='card box')
-        dog = []
-        for one_dog in dogs:
-            dog.append({
-                'name': one_dog.find('h2', class_='cx8').get_text(),
-                'photo': one_dog.find('img').get('src'),
-            })
-            for img in dog:
-                with open(f"img_pages_dogs/{img['name'] + '.jpg'}",
-                          'wb') as file:
-                    for bit in requests.get(img['photo'], verify=False).iter_content():
-                        file.write(bit)
+    def photo_writer(self, html):
+        for img in list(PetsPagesCats(URL).file_write_img_cats(html))[0]:
+            with open(f"img_pages_dogs/{img['name'] + '.jpg'}",
+                      'wb') as file:
+                for bit in requests.get(img['photo'], verify=False).iter_content():
+                    file.write(bit)
             yield file.name

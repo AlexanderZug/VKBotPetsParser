@@ -22,7 +22,7 @@ class PetsPagesCats:
             max_pag = [i for i in pag if i.isdigit()]
             return max(max_pag)
 
-    def _get_content_cats_pages(self, html):
+    def get_content_cats_pages(self, html):
         soup = BeautifulSoup(html, HTML_PARSER)
         cats = soup.find_all('div', class_='card box')
         cat = []
@@ -47,7 +47,7 @@ class PetsPagesCats:
             int_pages = int(pages)
             for page in range(1, int_pages):
                 html = requests.get(self.url, params={'page': page})
-                all_pages.extend([i for i in self._get_content_cats_pages(html.text)])
+                all_pages.extend([i for i in self.get_content_cats_pages(html.text)])
             yield all_pages
 
     @error_handler
@@ -59,11 +59,11 @@ class PetsPagesCats:
             int_pages = int(pages)
             for page in range(1, int_pages):
                 html = requests.get(self.url, params={'page': page})
-                all_pages.extend([i for i in self.__file_write_img_cats(html.text)])
+                all_pages.extend([i for i in self.photos_handler(html.text)])
             yield all_pages
 
     @error_handler
-    def __file_write_img_cats(self, html):
+    def file_write_img_cats(self, html):
         soup = BeautifulSoup(html, HTML_PARSER)
         cats = soup.find_all('div', class_='card box')
         cat = []
@@ -72,10 +72,13 @@ class PetsPagesCats:
                 'name': one_cat.find('h2', class_='cx8').get_text(),
                 'photo': one_cat.find('img').get('src'),
             })
-            for img in cat:
-                with open(f"img_pages_cats/{img['name'] + '.jpg'}",
-                          'wb') as file:
-                    for bit in requests.get(img['photo'], verify=False).iter_content():
-                        file.write(bit)
+            yield cat
+
+    def photos_handler(self, html):
+        for img in list(self.file_write_img_cats(html))[0]:
+            with open(f"img_pages_cats/{img['name'] + '.jpg'}",
+                      'wb') as file:
+                for bit in requests.get(img['photo'], verify=False).iter_content():
+                    file.write(bit)
             yield file.name
 

@@ -2,10 +2,10 @@ from decorators import error_handler
 import requests
 from PetsFinderCats import PetsFinderCats
 
-
 HOST = 'https://izpriuta.ru'
 HTML_PARSER = 'html.parser'
 URL_DOGS = 'https://izpriuta.ru/sobaki'
+
 
 class PetsFinderDogs:
     def __init__(self, url):
@@ -26,4 +26,3 @@ class PetsFinderDogs:
                 for bit in requests.get(img['photo'], verify=False).iter_content():
                     file.write(bit)
             yield file.name
-
