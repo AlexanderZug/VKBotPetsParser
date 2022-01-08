@@ -1,13 +1,11 @@
 from decorators import error_handler
-from Cats_pages import PetsPagesCats
+from Cats_more_pages import MorePagesCats
 import requests
 
-HOST = 'https://izpriuta.ru'
-URL = 'https://izpriuta.ru/sobaki'
-HTML_PARSER = 'html.parser'
+URL_DOGS = 'https://izpriuta.ru/sobaki'
 
 
-class PetsPagesDogs:
+class MorePagesDogs: # The class for pages-parsing dogs
 
     def __init__(self, url):
         self.url = url
@@ -17,11 +15,11 @@ class PetsPagesDogs:
         html = requests.get(self.url)
         if html.status_code == 200:
             all_pages = []
-            pages = PetsPagesCats(URL).pages_count_cats(html.text)
+            pages = MorePagesCats(URL_DOGS).pages_count(html.text)
             int_pages = int(pages)
             for page in range(1, int_pages):
                 html = requests.get(self.url, params={'page': page})
-                all_pages.extend([i for i in PetsPagesCats(URL).get_content_cats_pages(html.text)])
+                all_pages.extend([i for i in MorePagesCats(URL_DOGS).get_content_cats_pages(html.text)])
             yield all_pages
 
     @error_handler
@@ -29,7 +27,7 @@ class PetsPagesDogs:
         html = requests.get(self.url)
         if html.status_code == 200:
             all_pages = []
-            pages = PetsPagesCats(URL).pages_count_cats(html.text)
+            pages = MorePagesCats(URL_DOGS).pages_count(html.text)
             int_pages = int(pages)
             for page in range(1, int_pages):
                 html = requests.get(self.url, params={'page': page})
@@ -38,7 +36,7 @@ class PetsPagesDogs:
 
     @error_handler
     def photo_writer(self, html):
-        for img in list(PetsPagesCats(URL).file_write_img_cats(html))[0]:
+        for img in list(MorePagesCats(URL_DOGS).img_parse_cats_pages(html))[0]:
             with open(f"img_pages_dogs/{img['name'] + '.jpg'}",
                       'wb') as file:
                 for bit in requests.get(img['photo'], verify=False).iter_content():

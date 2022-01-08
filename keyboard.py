@@ -4,7 +4,7 @@ from vk_api.utils import get_random_id
 from token_group_num import TOKEN
 
 
-def keyboard_config(user_id):  # They give the keyboard to the user
+def keyboard_config(user_id):  # The function gives the keyboard to users
     vk_session = vk_api.VkApi(token=TOKEN)
     vk = vk_session.get_api()
 

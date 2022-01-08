@@ -1,18 +1,20 @@
-from decorators import error_handler
-from bs4 import BeautifulSoup
 import requests
+from bs4 import BeautifulSoup
+from decorators import error_handler
+
+
 
 
 HOST = 'https://izpriuta.ru'
 HTML_PARSER = 'html.parser'
 
 
-class PetsPagesCats:
+class MorePagesCats:  # The class for pages-parsing cats
 
     def __init__(self, url):
         self.url = url
 
-    def pages_count_cats(self, html=None):
+    def pages_count(self, html=None):
         if not html:
             html = requests.get(self.url).text
         soup = BeautifulSoup(html, HTML_PARSER)
@@ -33,9 +35,9 @@ class PetsPagesCats:
                 'description': one_cat.find('div', class_='h4').get_text(),
                 'link': HOST + one_cat.find('a', class_='с-red hover').get('href'),
             })
-        for v in cat:
-            cats_content = f"\n\n🐱ИМЯ: {v['name']} \n😸ПОЛ: {v['gender']} \n🐱ОПИСАНИЕ: {v['description']} \n" \
-                           f"🐈🐈🐈ССЫЛКА: {v['link']}"
+        for value in cat:
+            cats_content = f"\n\n🐱ИМЯ: {value['name']} \n🐶ПОЛ: {value['gender']} \n🐱ОПИСАНИЕ: " \
+                           f"{value['description']} \n 🐈🐕🐈ССЫЛКА: {value['link']}"
             yield cats_content
 
     @error_handler
@@ -43,7 +45,7 @@ class PetsPagesCats:
         html = requests.get(self.url, params=None, verify=False)
         if html.status_code == 200:
             all_pages = []
-            pages = self.pages_count_cats(html.text)
+            pages = self.pages_count(html.text)
             int_pages = int(pages)
             for page in range(1, int_pages):
                 html = requests.get(self.url, params={'page': page})
@@ -55,7 +57,7 @@ class PetsPagesCats:
         html = requests.get(self.url)
         if html.status_code == 200:
             all_pages = []
-            pages = self.pages_count_cats(html.text)
+            pages = self.pages_count(html.text)
             int_pages = int(pages)
             for page in range(1, int_pages):
                 html = requests.get(self.url, params={'page': page})
@@ -63,7 +65,7 @@ class PetsPagesCats:
             yield all_pages
 
     @error_handler
-    def file_write_img_cats(self, html):
+    def img_parse_cats_pages(self, html):
         soup = BeautifulSoup(html, HTML_PARSER)
         cats = soup.find_all('div', class_='card box')
         cat = []
@@ -74,8 +76,9 @@ class PetsPagesCats:
             })
             yield cat
 
+    @error_handler
     def photos_handler(self, html):
-        for img in list(self.file_write_img_cats(html))[0]:
+        for img in list(self.img_parse_cats_pages(html))[0]:
             with open(f"img_pages_cats/{img['name'] + '.jpg'}",
                       'wb') as file:
                 for bit in requests.get(img['photo'], verify=False).iter_content():
