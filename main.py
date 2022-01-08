@@ -7,7 +7,7 @@ from decorators import error_handler
 
 
 @error_handler
-def main(): # The main-function, that has configurations of vk-api and bot-commands
+def main():  # The main-function, that has configurations of vk-api and bot-commands
     vk_session = vk_api.VkApi(token=token_group_num.TOKEN)
     longpoll = VkBotLongPoll(vk_session, token_group_num.VK_GROUP_NUM)
     vk = vk_session.get_api()
