@@ -4,7 +4,7 @@ from vk_api.bot_longpoll import VkBotEventType
 from vk_api.utils import get_random_id
 from keyboard import keyboard_config
 from PetsParsFirstPage import FirstPageParse
-from PetsFinderDogs import get_content_dogs, img_parse_first_page_dogs
+from FirstPageDogs import get_content_dogs, img_parse_first_page_dogs
 from Cats_more_pages import MorePagesCats
 from Dogs_more_pages import MorePagesDogs
 
