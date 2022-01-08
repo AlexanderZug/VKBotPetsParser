@@ -40,7 +40,7 @@ def main():
         },
     }
 
-    send._in_process(list_commands)
+    #send._in_process(list_commands)
 
 
 if __name__ == '__main__':
