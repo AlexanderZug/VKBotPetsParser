@@ -19,7 +19,7 @@ class MorePagesDogs: # The class for pages-parsing dogs
             int_pages = int(pages)
             for page in range(1, int_pages):
                 html = requests.get(self.url, params={'page': page})
-                all_pages.extend([i for i in MorePagesCats(URL_DOGS).get_content_cats_pages(html.text)])
+                all_pages.extend([i for i in MorePagesCats(URL_DOGS).get_content_to_user(html.text)])
             yield all_pages
 
     @error_handler

@@ -2,9 +2,6 @@ import requests
 from bs4 import BeautifulSoup
 from decorators import error_handler
 
-
-
-
 HOST = 'https://izpriuta.ru'
 HTML_PARSER = 'html.parser'
 
@@ -35,7 +32,10 @@ class MorePagesCats:  # The class for pages-parsing cats
                 'description': one_cat.find('div', class_='h4').get_text(),
                 'link': HOST + one_cat.find('a', class_='с-red hover').get('href'),
             })
-        for value in cat:
+        yield cat
+
+    def get_content_to_user(self, html):
+        for value in list(self.get_content_cats_pages(html))[0]:
             cats_content = f"\n\n🐱ИМЯ: {value['name']} \n🐶ПОЛ: {value['gender']} \n🐱ОПИСАНИЕ: " \
                            f"{value['description']} \n 🐈🐕🐈ССЫЛКА: {value['link']}"
             yield cats_content
@@ -49,7 +49,7 @@ class MorePagesCats:  # The class for pages-parsing cats
             int_pages = int(pages)
             for page in range(1, int_pages):
                 html = requests.get(self.url, params={'page': page})
-                all_pages.extend([i for i in self.get_content_cats_pages(html.text)])
+                all_pages.extend([i for i in self.get_content_to_user(html.text)])
             yield all_pages
 
     @error_handler
@@ -84,4 +84,3 @@ class MorePagesCats:  # The class for pages-parsing cats
                 for bit in requests.get(img['photo'], verify=False).iter_content():
                     file.write(bit)
             yield file.name
-
