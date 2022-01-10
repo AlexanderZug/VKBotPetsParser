@@ -4,6 +4,7 @@ from PetsParsFirstPage import FirstPageParse
 
 URL_DOGS = 'https://izpriuta.ru/sobaki'
 
+
 # To functions for dogs-first-page-parsing
 
 @error_handler
@@ -12,10 +13,6 @@ def get_content_dogs():
         dogs_content = f"\n\n🐶ИМЯ: {value['name']} \n🐱ПОЛ: {value['gender']} \n🐶ОПИСАНИЕ: {value['description']} \n" \
                        f"🐕🐈🐕ССЫЛКА: {value['link']}"
         yield dogs_content
-
-
-if __name__ == '__main__':
-    get_content_dogs()
 
 
 @error_handler
@@ -29,4 +26,5 @@ def img_parse_first_page_dogs():
 
 
 if __name__ == '__main__':
+    get_content_dogs()
     img_parse_first_page_dogs()
