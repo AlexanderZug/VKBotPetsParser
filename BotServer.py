@@ -117,7 +117,7 @@ class BotServer:
                     break
             else:
                 self.__user_query.append([user_id, pets_type, pages])
-        except Exception:
+        except IndexError:
             pass
 
     def __user_query_worker(self):  # The method of pets-validation, that works with user-query
