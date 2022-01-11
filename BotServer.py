@@ -8,7 +8,6 @@ from FirstPageDogs import get_content_dogs, img_parse_first_page_dogs
 from Cats_more_pages import MorePagesCats
 from Dogs_more_pages import MorePagesDogs
 
-
 URL_CATS = 'https://izpriuta.ru/koshki'
 URL_DOGS = 'https://izpriuta.ru/sobaki'
 UNVISIBLE_SEND_USER_ELEMENT = ' --noshow'
@@ -25,10 +24,10 @@ class BotServer:
                                      'ЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮ,Ё'))
         self.__par_cat = [i for i in FirstPageParse(URL_CATS).content_disc()]
         self.__par_dog = [i for i in get_content_dogs()]
-        self.__cats_pages_content_disc = list(MorePagesCats(URL_CATS)._parse_cats())[0]
-        self.__dogs_pages_content_disc = list(MorePagesDogs(URL_DOGS)._parse_dogs())[0]
-        self.__cats_img = list(MorePagesCats(URL_CATS)._img_parse_from_pages_cats())[0]
-        self.__dogs_img = list(MorePagesDogs(URL_DOGS)._img_parse_from_pages_dogs())[0]
+        self.__cats_pages_content_disc = list(MorePagesCats(URL_CATS).parse_cats())[0]
+        self.__dogs_pages_content_disc = list(MorePagesDogs(URL_DOGS).parse_dogs())[0]
+        self.__cats_img = list(MorePagesCats(URL_CATS).img_parse_from_pages_cats())[0]
+        self.__dogs_img = list(MorePagesDogs(URL_DOGS).img_parse_from_pages_dogs())[0]
         self.__upload = upload
         self.__var_cat_content_photo = []
         self.__var_dog_content_photo = []
@@ -51,14 +50,14 @@ class BotServer:
         bot_commands = '\n\n'.join(bot_commands)
         self._vk.messages.send(
             peer_id=user_id,
-            message=f'Здравствуйте! Я помогу Вам найти себе питомца в приютах Москвы!\n\n{bot_commands}',
+            message=f'Здравствуйте! Я помогу Вам найти себе питомца в нашем приюте!\n\n{bot_commands}',
             random_id=get_random_id(),
             keyboard=keyboard_config(user_id),  # Here users get the keyboard
         )
 
     def main_photo_content_cats(self, user_id):  # The method for first page with cats
         content_img_counter = 0
-        for i in FirstPageParse(URL_CATS).send_photos_in_dir():
+        for i in FirstPageParse(URL_CATS).save_photos_in_dir():
             self.__var_cat_content_photo = self.__par_cat[0 + content_img_counter]
             content_img_counter += 1
             time.sleep(0.2)  # Time-sleep is necessary for keeping from VK-ban
@@ -79,11 +78,11 @@ class BotServer:
         self.__dogs_or_cats_more(user_id, 2, 1)
 
     def more_pets_cats(self, user_id):  # The method, that takes users-date, if they want to see more pets
-        if self.__user_query_worker()[0]:
-            self.__user_query_worker()[1][2] += 8
-            if self.__user_query_worker()[1][2] > len(self.__cats_img):  # How many pets are on site
+        if self.__user_query[1] == 1:
+            self.__user_query[2] += 8
+            if self.__user_query[2] > len(self.__cats_img):  # How many pets are on site
                 self.__not_more_pages(user_id)
-                del self.__user_query_worker()[1][2]  # If all pages are showed, it deletes pages-counter
+                self.__user_query[:] = [] # If all pages are showed, it deletes pages-counter
             else:
                 self.__photo_from_pages_cats(user_id)
         else:
@@ -106,25 +105,19 @@ class BotServer:
 
     def __dogs_or_cats_more(self, user_id, pets_type, pages):  # The method for more pets, helps by pets-type validation
         try:
-            for key, i in enumerate(self.__user_query):
+            for i in self.__user_query:
                 if i[0] == user_id and i[1] == 2:
-                    self.__user_query[key][1] = 1
-                    self.__user_query[key][2] = 1
+                    self.__user_query[1] = 1
+                    self.__user_query[2] = 1
                     break
                 if i[0] == user_id and i[1] == 1:
-                    self.__user_query[key][1] = 2
-                    self.__user_query[key][2] = 1
+                    self.__user_query[1] = 2
+                    self.__user_query[2] = 1
                     break
             else:
-                self.__user_query.append([user_id, pets_type, pages])
-        except IndexError:
+                self.__user_query[0:] = [user_id, pets_type, pages]
+        except (IndexError, TypeError):
             pass
-
-    def __user_query_worker(self):  # The method of pets-validation, that works with user-query
-        for user in self.__user_query:
-            if user[1] == 1:
-                return True, user
-            return False, user
 
     def __photo_from_pages_cats(self, user_id):  # The method for more-cats-iteration
         for i in self.__cats_img[self.__iter_counter_cats:self.__iter_counter_cats + 9]:
@@ -147,11 +140,11 @@ class BotServer:
         self.__more_pets_in_iter(user_id)
 
     def __more_pets_dogs(self, user_id):
-        if not self.__user_query_worker()[0]:
-            self.__user_query_worker()[1][2] += 8
-            if self.__user_query_worker()[1][2] > len(self.__dogs_img):
+        if not self.__user_query[1] == 1:
+            self.__user_query[2] += 8
+            if self.__user_query[2] > len(self.__dogs_img):
                 self.__not_more_pages(user_id)
-                del self.__user_query_worker()[1][2]  # If all pages are showed, it deletes pages-counter
+                self.__user_query[0:] = []
             else:
                 self.__photo_from_pages_dogs(user_id)
         else:
