@@ -63,6 +63,7 @@ class BotServer:
             time.sleep(0.2)  # Time-sleep is necessary for keeping from VK-ban
             self.__send_photo_cats(user_id, *self.__upload_photo(self.__upload, i))
             time.sleep(1)
+        self.__user_query[:] = []
         self.__more_pets_in_iter(user_id)
         self.__dogs_or_cats_more(user_id, 1, 1)
 
@@ -74,6 +75,7 @@ class BotServer:
             time.sleep(0.2)  # Time-sleep is necessary for keeping from VK-ban
             self.__send_photo_dogs(user_id, *self.__upload_photo(self.__upload, i))
             time.sleep(1)
+        self.__user_query[:] = []
         self.__more_pets_in_iter(user_id)
         self.__dogs_or_cats_more(user_id, 2, 1)
 
