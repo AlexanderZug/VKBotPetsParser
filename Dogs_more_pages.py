@@ -11,7 +11,7 @@ class MorePagesDogs: # The class for pages-parsing dogs
         self.url = url
 
     @error_handler
-    def _parse_dogs(self):
+    def parse_dogs(self):
         html = requests.get(self.url)
         if html.status_code == 200:
             all_pages = []
@@ -23,7 +23,7 @@ class MorePagesDogs: # The class for pages-parsing dogs
             yield all_pages
 
     @error_handler
-    def _img_parse_from_pages_dogs(self):
+    def img_parse_from_pages_dogs(self):
         html = requests.get(self.url)
         if html.status_code == 200:
             all_pages = []

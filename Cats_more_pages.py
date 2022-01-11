@@ -41,7 +41,7 @@ class MorePagesCats:  # The class for pages-parsing cats
             yield cats_content
 
     @error_handler
-    def _parse_cats(self):
+    def parse_cats(self):
         html = requests.get(self.url, params=None, verify=False)
         if html.status_code == 200:
             all_pages = []
@@ -53,7 +53,7 @@ class MorePagesCats:  # The class for pages-parsing cats
             yield all_pages
 
     @error_handler
-    def _img_parse_from_pages_cats(self):
+    def img_parse_from_pages_cats(self):
         html = requests.get(self.url)
         if html.status_code == 200:
             all_pages = []

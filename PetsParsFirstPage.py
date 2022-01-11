@@ -44,7 +44,7 @@ class FirstPageParse:  # The class for first-page-parsing (primary worked with c
             })
         yield cat
 
-    def send_photos_in_dir(self):
+    def save_photos_in_dir(self):
         for img in list(self.img_parse_first_page())[0]:
             with open(f"images/{img['name'] + '.jpg'}",
                       'wb') as file:
