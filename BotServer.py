@@ -80,15 +80,21 @@ class BotServer:
         self.__dogs_or_cats_more(user_id, 2, 1)
 
     def more_pets_cats(self, user_id):  # The method, that takes users-date, if they want to see more pets
-        if self.__user_query[1] == 1:
-            self.__user_query[2] += 8
-            if self.__user_query[2] > len(self.__cats_img):  # How many pets are on site
-                self.__not_more_pages(user_id)
-                self.__user_query[:] = [] # If all pages are showed, it deletes pages-counter
+        try:
+            if self.__user_query[1] == 1:
+                self.__user_query[2] += 8
+                if self.__user_query[2] > len(self.__cats_img):  # How many pets are on site
+                    self.__not_more_pages(user_id)
+                    self.__user_query[:] = [] # If all pages are showed, it clears user_query
+                    self.__cats_img = list(MorePagesCats(URL_CATS).img_parse_from_pages_cats())[0]  # generator restarts
+                    self.__iter_counter_cats = 0  # iterations restart
+                    self.__img_counter_pages_cats = 0
+                else:
+                    self.__photo_from_pages_cats(user_id)
             else:
-                self.__photo_from_pages_cats(user_id)
-        else:
-            self.__more_pets_dogs(user_id)
+                self.__more_pets_dogs(user_id)
+        except (IndexError, TypeError):
+            self.__restart_iteration(user_id)
 
     def __new_message(self):  # The method with some vk-api configurations to get new messages from VK
         for event in self.__longpoll.listen():
@@ -147,6 +153,9 @@ class BotServer:
             if self.__user_query[2] > len(self.__dogs_img):
                 self.__not_more_pages(user_id)
                 self.__user_query[0:] = []
+                self.__dogs_img = list(MorePagesDogs(URL_DOGS).img_parse_from_pages_dogs())[0]
+                self.__iter_counter_dogs = 0
+                self.__img_counter_pages_dogs = 0
             else:
                 self.__photo_from_pages_dogs(user_id)
         else:
@@ -223,5 +232,14 @@ class BotServer:
             peer_id=user_id,
             message='📌Если хотите увидеть больше питомцев напишите 🐕ЕЩЕ🐈 или наберите команду 🐕ПОМОЩЬ🐈 , '
                     'чтобы вернуться в главное меню.\n',
+            random_id=get_random_id(),
+        )
+
+    def __restart_iteration(self, user_id):
+        self._vk.messages.send(
+            peer_id=user_id,
+            message='📌Если хотите посмотреть питомцев еще раз наберите команду 🐕КОШКИ🐈 или 🐕СОБАКИ🐈,\n'
+                    'а затем вновь команду 🐕ЕЩЕ🐈.\n Чтобы увидеть всех питомцев, переходите на наш '
+                    'сайт: https://izpriuta.ru/📌',
             random_id=get_random_id(),
         )
