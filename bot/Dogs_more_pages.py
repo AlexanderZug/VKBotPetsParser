@@ -1,5 +1,5 @@
-from decorators import error_handler
-from Cats_more_pages import MorePagesCats
+from bot.decorators import error_handler
+from bot.Cats_more_pages import MorePagesCats
 import requests
 
 URL_DOGS = 'https://izpriuta.ru/sobaki'

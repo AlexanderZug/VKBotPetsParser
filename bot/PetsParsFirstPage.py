@@ -1,4 +1,4 @@
-from decorators import error_handler
+from bot.decorators import error_handler
 from bs4 import BeautifulSoup
 import requests
 requests.packages.urllib3.disable_warnings()

@@ -1,4 +1,4 @@
-from decorators import error_handler
+from bot.decorators import error_handler
 import requests
 from PetsParsFirstPage import FirstPageParse
 
