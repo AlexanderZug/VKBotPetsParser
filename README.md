@@ -16,7 +16,7 @@ Install requirements:
 pip3 install -r requirements.txt
 ```
 
-Add your bot token and group id here in token_group_num.py
+Add your bot token and group id here in token_group_num.py:
 ```
 TOKEN = ''
 VK_GROUP_NUM = ''
