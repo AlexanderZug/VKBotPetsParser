@@ -1,5 +1,5 @@
 # VKBotPetsParser
-# The Bot for VK, that helps to find pets in one of Moscow shelters.
+The Bot for VK, that helps to find pets in one of Moscow shelters.
 
 ## Deploy locally:
 
