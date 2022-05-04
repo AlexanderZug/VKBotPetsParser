@@ -1,6 +1,9 @@
 # VKBotPetsParser
 The Bot for VK, that helps to find pets in one of Moscow shelters.
 
+![](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![](https://img.shields.io/badge/Heroku-430098?style=for-the-badge&logo=heroku&logoColor=white)
+
 ## Deploy locally:
 
 > Install Python(If it's not installed)<br>
