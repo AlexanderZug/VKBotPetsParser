@@ -30,7 +30,7 @@ VK_GROUP_NUM = ''
 Start programm:
 ```
 cd bot
-python 3 main.py
+python3 main.py
 ```
 
 > Technologies used in the project: Python3, beautifulsoup4, vk-api, requests.
