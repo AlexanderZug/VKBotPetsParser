@@ -1,5 +1,7 @@
 # VKBotPetsParser
 The Bot for VK, that helps to find pets in one of Moscow shelters.
+You can look at the work of the bot at this link (https://vk.me/club209054655).
+Go to the group and write a message, it will provide a list of available commands
 
 ![](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
 ![](https://img.shields.io/badge/вконтакте-%232E87FB.svg?&style=for-the-badge&logo=vk&logoColor=white)
