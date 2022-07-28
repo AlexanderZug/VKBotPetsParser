@@ -1,7 +1,7 @@
 import vk_api
+from token_group_num import TOKEN
 from vk_api.keyboard import VkKeyboard, VkKeyboardColor
 from vk_api.utils import get_random_id
-from token_group_num import TOKEN
 
 
 def keyboard_config(user_id):  # The function gives the keyboard to users
